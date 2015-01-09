@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS user (
   email VARCHAR(255) NOT NULL ,
   password TEXT NOT NULL,
   avatar VARCHAR(255),
+  motto VARCHAR(255),
   registerdate DATETIME,
   lastlogin DATETIME,
   PRIMARY KEY (id),
