@@ -42,8 +42,8 @@ CREATE TABLE IF NOT EXISTS matches (
   date_time DATETIME,
   team1id INTEGER UNSIGNED NOT NULL,
   team2id INTEGER UNSIGNED NOT NULL,
-  team1goals INTEGER UNSIGNED,
-  team2goals INTEGER UNSIGNED,
+  team1goals INTEGER NOT NULL,
+  team2goals INTEGER NOT NULL,
   isfinished BOOL DEFAULT FALSE,
   PRIMARY KEY (id)
 );
