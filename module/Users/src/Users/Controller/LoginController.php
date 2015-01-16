@@ -10,6 +10,7 @@ namespace Users\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\Debug\Debug;
 
 class LoginController extends AbstractActionController
 {
@@ -63,12 +64,15 @@ class LoginController extends AbstractActionController
             $model->setTemplate('users/login/index');
             return $model;
         } else {
+            $adapter = $this->getAuthService()->getAdapter();
             //check authentication...
-            $this->getAuthService()->getAdapter()->setIdentity($this->request->getPost('name'));
-            $this->getAuthService()->getAdapter()->setCredential($this->request->getPost('password'));
+            $adapter->setIdentity($this->request->getPost('name'));
+            $adapter->setCredential($this->request->getPost('password'));
             $result = $this->getAuthService()->authenticate();
             if ($result->isValid()) {
-                $this->getAuthService()->getStorage()->write($this->request->getPost('name'));
+                $userInfo = $adapter->getResultRowObject(null, 'password');
+                #$this->getAuthService()->getStorage()->write($this->request->getPost('name'));
+                $this->getAuthService()->getStorage()->write($userInfo);
                 return $this->redirect()->toRoute(NULL , array(
                     'controller' => 'login',
                     'action' =>  'confirm'
@@ -86,9 +90,9 @@ class LoginController extends AbstractActionController
 
     public function confirmAction()
     {
-        $user_name = $this->getAuthService()->getStorage()->read();
+        $user = $this->getAuthService()->getStorage()->read();
         $viewModel  = new ViewModel(array(
-            'user_name' => $user_name
+            'user_name' => $user->name
         ));
         return $viewModel;
     }
