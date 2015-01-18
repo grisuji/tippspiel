@@ -1,18 +1,40 @@
 <section class="deliver">
     <h2>Abgabe</h2>
+
+    <?php
+    $form = $this->form;
+    $form->prepare();
+    $form->setAttribute('action', $this->url(NULL,array('controller'=>'Deliver', 'action'=>'index')));
+    $form->setAttribute('method', 'post');
+    echo $this->form()->openTag($form);
+    $select = $this->formElement($form->get('select'));
+    #$select->setAttributes(array('value' => '3'));
+    echo $select;
+    ?>
+
     <table class="table">
         <tr>
             <th>Spielbeginn</th>
             <th>Heimmannschaft</th>
             <th>Gastmannschaft</th>
+            <th>Tipp</th>
         </tr>
-        <?php foreach ($matches as $m) : ?>
+        <?php $i=0; foreach ($matches as $m) :
+            $i++;
+#            Zend:Debug::Dump('a  '.'match'.$i.'_team1');
+            ?>
             <tr>
                 <td><?php echo $this->escapeHtml($m->start);?></td>
                 <td><?php echo $this->escapeHtml($m->team1name);?></td>
                 <td><?php echo $this->escapeHtml($m->team2name);?></td>
+                <td><?php
+                        echo $this->formElement($form->get('match'.$i.'_team1'));
+                        echo ' : ';
+                        echo $this->formElement($form->get('match'.$i.'_team2'));
+                    ?></td>
             </tr>
         <?php endforeach; ?>
     </table>
+
     <hr />
 <section>

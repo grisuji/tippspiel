@@ -62,12 +62,16 @@ class MatchTable {
             ->OR
             ->isNull('userid');
         $select->where($where);
+        $select->order('date_time');
         $resultset = $this->tableGateway->selectWith($select);
         #Debug::Dump($select->getSqlString());
         #foreach($resultset as $row) {
         #    Debug::Dump($row);
         #}
-        return $resultset;
+        $rs = new ResultSet();
+        $rs->initialize($resultset);
+        $rs->buffer();
+        return $rs;
     }
 
 }
