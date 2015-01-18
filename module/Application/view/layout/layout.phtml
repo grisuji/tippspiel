@@ -43,6 +43,7 @@
                             <li ><a href="<?php echo $this->url('users/user-manager') ?>"><?php echo $this->translate('Manage Users') ?></a></li>
                         <?php } ?>
                         <?php if ($user = $this->identity()) { ?>
+                            <li ><a href="<?php echo $this->url('application/deliver') ?>"><?php echo $this->translate('Tippen') ?></a></li>
                             <li ><a href="<?php echo $this->url('users/login', array('action' => 'logout')) ?>"><?php echo $this->translate('Logout') ?></a></li>
                         <?php } else { ?>
                             <li ><a href="<?php echo $this->url('users/login') ?>"><?php echo $this->translate('Login') ?></a></li>
@@ -55,7 +56,7 @@
             <?php echo $this->content; ?>
             <hr>
             <footer>
-                <p>&copy; 2005 - <?php echo date('Y') ?> by Zend Technologies Ltd. <?php echo $this->translate('All rights reserved.') ?></p>
+                <p>&copy; 2014 - <?php echo date('Y') ?> by Grisuji <?php echo $this->translate('All rights reserved.') ?></p>
             </footer>
         </div> <!-- /container -->
         <?php echo $this->inlineScript() ?>

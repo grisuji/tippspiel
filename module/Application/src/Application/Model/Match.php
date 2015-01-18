@@ -24,7 +24,6 @@ class Match {
     public function exchangeArray($data)
     {
         $this->id = (isset($data['id'])) ? $data['id'] : null;
-        $this->userid = (isset($data['userid'])) ? $data['userid'] : null;
         $this->team1name = (isset($data['team1name'])) ? $data['team1name'] : null;
         $this->team2name = (isset($data['team2name'])) ? $data['team2name'] : null;
         $this->team1goals = (isset($data['team1goals'])) ? $data['team1goals'] : null;
@@ -34,6 +33,7 @@ class Match {
         $this->userid = (isset($data['userid'])) ? $data['userid'] : null;
         $this->team1tip = (isset($data['team1tip'])) ? $data['team1tip'] : null;
         $this->team2tip = (isset($data['team2tip'])) ? $data['team2tip'] : null;
+        $this->start = (isset($data['date_time'])) ? $data['date_time'] : null;
     }
 
     public function getArrayCopy()

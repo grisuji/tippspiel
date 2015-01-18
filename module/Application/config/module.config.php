@@ -36,6 +36,20 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
+                    'deliver' => array(
+                        'type'    => 'Segment',
+                        'may_terminate' => true,
+                        'options' => array(
+                            'route'    => '/deliver[/:action]',
+                            'constraints' => array(
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\Deliver',
+                                'action'     => 'index',
+                            ),
+                        ),
+                    ),
                     'default' => array(
                         'type'    => 'Segment',
                         'options' => array(
@@ -73,7 +87,8 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Application\Controller\Index' => 'Application\Controller\IndexController'
+            'Application\Controller\Index' => 'Application\Controller\IndexController',
+            'Application\Controller\Deliver' => 'Application\Controller\DeliverController',
         ),
     ),
     'view_manager' => array(

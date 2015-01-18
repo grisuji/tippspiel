@@ -26,7 +26,7 @@ class UserManagerController extends AbstractActionController{
 
     public function indexAction()
     {
-        if($this->getAuthService()->getStorage()->read()!='admin'){
+        if($this->getAuthService()->getStorage()->read()->name!='admin'){
         //if(!($this->getAuthService()->hasIdentity() and $this->getAuthService()->getIdentity()=='admin')) {
             return $this->redirect()->toRoute(NULL, array(
                 'controller' => 'login',

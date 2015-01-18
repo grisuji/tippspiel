@@ -1,39 +1,18 @@
 <section class="deliver">
     <h2>Abgabe</h2>
-    <?php if ($this->error): ?>
-        <p class="error">
-            Ein Fehler ist bei Deiner Abgabe aufgetreten. Die Tipps wurden nicht gespeichert. Bitte versuche es noch einmal.
-        </p>
-    <?php endif ?>
-    <?php
-    $form = $this->form;
-    $form->prepare();
-    $form->setAttribute('action', $this->url(NULL,array('controller'=>'Deliver', 'action'=>'process')));
-    $form->setAttribute('method', 'post');
-    echo $this->form()->openTag($form);
-    ?>
-
-    <d1 class="zend_form">
-        <dt><?php echo $this->formLabel($form->get('name'));?></dt>
-        <dd>
-            <?php
-            echo $this->formElement($form->get('name'));
-            ?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('password'));?></dt>
-        <dd>
-            <?php
-            echo $this->formElement($form->get('password'));
-            echo $this->formElementErrors($form->get('password'));
-            ?>
-        </dd>
-    </d1></br>
-    <dd>
-        <?php
-        echo $this->formElement($form->get('submit'));
-        echo $this->formElementErrors($form->get('submit'));
-        ?>
-    </dd>
-    </d1>
-    <?php echo $this->form()->closeTag(); ?>
-</section>
+    <table class="table">
+        <tr>
+            <th>Spielbeginn</th>
+            <th>Heimmannschaft</th>
+            <th>Gastmannschaft</th>
+        </tr>
+        <?php foreach ($matches as $m) : ?>
+            <tr>
+                <td><?php echo $this->escapeHtml($m->start);?></td>
+                <td><?php echo $this->escapeHtml($m->team1name);?></td>
+                <td><?php echo $this->escapeHtml($m->team2name);?></td>
+            </tr>
+        <?php endforeach; ?>
+    </table>
+    <hr />
+<section>

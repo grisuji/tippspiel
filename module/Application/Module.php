@@ -16,7 +16,11 @@ use Zend\Db\TableGateway\TableGateway;
 
 use Application\Model\Match;
 use Application\Model\MatchTable;
+use Application\Model\Tip;
+use Application\Model\TipTable;
 
+use Application\Form\DeliverForm;
+use Application\Form\DeliverFilter;
 
 class Module
 {
@@ -47,6 +51,18 @@ class Module
     {
         return array(
             'factories' => array(
+                //FORMS
+                'DeliverForm' => function ($sm) {
+                    $form = new DeliverForm();
+                    $form->setInputFilter($sm->get('DeliverFilter'));
+                    return $form;
+                },
+                //FILTERS
+                'DeliverFilter' => function ($sm) {
+                    $filter = new DeliverFilter();
+                    return $filter;
+                },
+                //TABLES
                 'MatchTable' => function($sm)
                 {
                     $tableGateway = $sm->get('MatchTableGateway');
