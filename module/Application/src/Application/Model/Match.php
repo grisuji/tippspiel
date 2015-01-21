@@ -15,6 +15,8 @@ class Match {
     public $team2name;
     public $team1goals;
     public $team2goals;
+    public $team1emblem;
+    public $team2emblem;
     public $isfinished;
     public $tipid;
     public $userid;
@@ -28,11 +30,13 @@ class Match {
         $this->team2name = (isset($data['team2name'])) ? $data['team2name'] : null;
         $this->team1goals = (isset($data['team1goals'])) ? $data['team1goals'] : null;
         $this->team2goals = (isset($data['team2goals'])) ? $data['team2goals'] : null;
+        $this->team1emblem = (isset($data['team1emblem'])) ? $data['team1emblem'] : null;
+        $this->team2emblem = (isset($data['team2emblem'])) ? $data['team2emblem'] : null;
         $this->isfinished = (isset($data['isfinished'])) ? $data['isfinished'] : null;
         $this->tipid = (isset($data['tipid'])) ? $data['tipid'] : null;
         $this->userid = (isset($data['userid'])) ? $data['userid'] : null;
-        $this->team1tip = (isset($data['team1tip'])) ? $data['team1tip'] : null;
-        $this->team2tip = (isset($data['team2tip'])) ? $data['team2tip'] : null;
+        $this->team1tip = (isset($data['team1tip'])) ? $data['team1tip'] : "";
+        $this->team2tip = (isset($data['team2tip'])) ? $data['team2tip'] : "";
         $this->start = (isset($data['date_time'])) ? $data['date_time'] : null;
     }
 

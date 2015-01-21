@@ -40,9 +40,10 @@ return array(
                         'type'    => 'Segment',
                         'may_terminate' => true,
                         'options' => array(
-                            'route'    => '/deliver[/:action]',
+                            'route'    => '/deliver[/:action][/:param]',
                             'constraints' => array(
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'param'     => '[0-9]*',
                             ),
                             'defaults' => array(
                                 'controller' => 'Application\Controller\Deliver',

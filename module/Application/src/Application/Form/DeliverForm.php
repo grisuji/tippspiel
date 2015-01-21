@@ -22,17 +22,28 @@ class DeliverForm extends Form
             for ($team = 1; $team <= 2; $team++) {
                 #Zend:Debug::Dump('a  '.'match'.$match.'_team'.$team);
                 $this->add(array(
+                        'type' => 'number',
                         'name' => 'match'.$match.'_team'.$team,
                         'attributes' => array(
-                            'type' => 'number'
+                            'size' => '3',
                         ),
                         'options' => array(
                             'label' => 'Spiel '.$match.' Mannschaft '.$team,
+                            'size' => '3'
                         )
                     )
                 );
             }
         }
+
+        $this->add(array(
+                'type' => 'hidden',
+                'name' => 'day',
+                'attributes' => array(
+                    'value' => $selected //set checked to '1'
+                )
+            )
+        );
 
         $this->add(array(
                 'type' => 'select',

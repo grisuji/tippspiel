@@ -26,8 +26,10 @@ class DeliverController extends AbstractActionController {
         return $this->authservice;
     }
 
-    public function indexAction()
+    public function processAction()
     {
+        /* @var $matches \Application\Model\Match  */
+        /* @var $matchTable \Application\Model\MatchTable  */
         if($this->getAuthService()->hasIdentity()) {
             $userid = $this->getAuthService()->getStorage()->read()->id;
         } else {
@@ -54,15 +56,15 @@ class DeliverController extends AbstractActionController {
         }
 
         $form->populateValues($data);
-
-        #Zend:Debug::dump($matches);
-        #exit;
-        $viewModel = new viewModel(array('matches' => $matches, 'form' => $form, 'preselect' => $this->day));
+        $viewModel = new viewModel(array('matches' => $matches, 'form' => $form));
         return $viewModel;
     }
 
-    public function processAction()
+    public function indexAction()
     {
+        /* @var $matches \Application\Model\Match  */
+        /* @var $tipTable \Application\Model\TipTable  */
+        /* @var $matchTable \Application\Model\MatchTable  */
         if($this->getAuthService()->hasIdentity()) {
             $userid = $this->getAuthService()->getStorage()->read()->id;
         } else {
@@ -72,30 +74,46 @@ class DeliverController extends AbstractActionController {
             ));
         }
 
+        $request = $this->getRequest();
+        $post = $request->isPost();
+        if ($post) {
+            $this->day = $this->request->getPost('select');
+            if (is_null($this->day)) {
+                $this->day = $this->request->getPost('day');
+#                Debug::dump($this->day);exit;
+            }
+        }
+
+        if (is_null($this->day)) {
+            $this->day = 1;
+        }
         $matchTable = $this->getServiceLocator()->get('MatchTable');
         $matches = $matchTable->getUserMatchesByDay($userid, $this->day);
         $tipTable = $this->getServiceLocator()->get('TipTable');
 
-        $request = $this->getRequest();
-        if (!$request->isPost()) {
-            $index = 0;
-            foreach($matches as $m) {
-                $index++;
-                $tip1 = $this->request->getPost('match'.$index.'_team1');
-                $tip2 = $this->request->getPost('match'.$index.'_team2');
-                if ($m->team1tip != $tip1 or $m->team2tip != $tip2)
-                {
-                    $m->team1tip = (isset($tip1)) ? $tip1 : 0;
-                    $m->team2tip = (isset($tip2)) ? $tip2 : 0;
-                    $tipTable->save($m);
+        $index = 0;
+        $data = array();
+        foreach($matches as $m) {
+            $index++;
+            if ($post) {
+                $tip1 = $this->request->getPost('match' . $index . '_team1');
+                $tip2 = $this->request->getPost('match' . $index . '_team2');
+
+                if ($m->team1tip != $tip1 or $m->team1tip != $tip2) {
+                    if (!empty($tip1)) $m->team1tip = $tip1;
+                    if (!empty($tip2)) $m->team2tip = $tip2;
+                    $m->userid = $userid;
+                    $tipTable->saveTip($m);
                 }
             }
+            $data['match'.$index.'_team1'] = $m->team1tip;
+            $data['match'.$index.'_team2'] = $m->team2tip;
         }
-        return $this->redirect()->toRoute(NULL , array(
-            'controller' => 'deliver',
-            'action' =>  'index'
-            )
-        );
+        $form = new DeliverForm($this->day);
+        $form->populateValues($data);
+        $viewModel = new viewModel(array('matches' => $matches, 'form' => $form));
+        #Debug::dump($this->day);exit;
+        return $viewModel;
     }
 
 

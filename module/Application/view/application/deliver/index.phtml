@@ -14,9 +14,10 @@
     <?php
     $form2 = $this->form;
     $form2->prepare();
-    $form2->setAttribute('action', $this->url(NULL,array('controller'=>'deliver', 'action'=>'process')));
+    $form2->setAttribute('action', $this->url(NULL,array('controller'=>'deliver', 'action'=>'index')));
     $form2->setAttribute('method', 'post');
     echo $this->form()->openTag($form2);
+    echo $this->formElement($form2->get('day'));
     ?>
     <table class="table">
         <tr>
@@ -27,12 +28,16 @@
         </tr>
         <?php $i=0; foreach ($matches as $m) :
             $i++;
-#            Zend:Debug::Dump('a  '.'match'.$i.'_team1');
+            #Zend:Debug::Dump('a  '.'match'.$i.'_team1');
             ?>
             <tr>
                 <td><?php echo $this->escapeHtml($m->start);?></td>
-                <td><?php echo $this->escapeHtml($m->team1name);?></td>
-                <td><?php echo $this->escapeHtml($m->team2name);?></td>
+                <td>
+                    <?php echo $this->escapeHtml($m->team1name);?>
+                </td>
+                <td>
+                    <?php echo $this->escapeHtml($m->team2name);?>
+                </td>
                 <td><?php
                         echo $this->formElement($form2->get('match'.$i.'_team1'));
                         echo ' : ';

@@ -10,6 +10,9 @@ namespace Application\Model;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\Sql\Where;
 use Zend\Db\TableGateway\TableGateway;
+use Zend\Debug\Debug;
+use Application\Model\Match;
+
 use Exception;
 
 class TipTable {
@@ -22,13 +25,14 @@ class TipTable {
 
     public function saveTip(Match $match)
     {
+        $id = (int)$match->tipid;
         $data = array(
             'userid' => $match->userid,
-            'matchid' => $match->matchid,
+            'matchid' => $match->id,
             'team1tip' => $match->team1tip,
             'team2tip' => $match->team2tip
         );
-        $id = (int)$match->tipid;
+
         if ($id == 0) {
             $this->tableGateway->insert($data);
         } else {

@@ -33,8 +33,10 @@ class MatchTable {
     {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(array('id', 'league', 'saison', 'date_time', 'groupdid', 'team1goals', 'team2goals', 'isfinished' ));
-        $select->join(array('team1' => 'teams'), 'team1.id=matches.team1id', array('team1name' =>'longname'), 'left');
-        $select->join(array('team2' => 'teams'), 'team2.id=matches.team2id', array('team2name' => 'longname'),'left');
+        $select->join(array('team1' => 'teams'), 'team1.id=matches.team1id',
+                      array('team1name' => 'longname', 'team1emblem' => 'emblem'), 'left');
+        $select->join(array('team2' => 'teams'), 'team2.id=matches.team2id',
+                      array('team2name' => 'longname', 'team2emblem' => 'emblem'),'left');
         $select->where(array('groupid' => (int) $day));
         $resultset = $this->tableGateway->selectWith($select);
         return $resultset;
@@ -62,7 +64,7 @@ class MatchTable {
             ->OR
             ->isNull('userid');
         $select->where($where);
-        $select->order('date_time');
+        $select->order('id');
         $resultset = $this->tableGateway->selectWith($select);
         #Debug::Dump($select->getSqlString());
         #foreach($resultset as $row) {
