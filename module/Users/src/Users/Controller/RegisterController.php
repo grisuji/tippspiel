@@ -38,6 +38,7 @@ class RegisterController extends AbstractActionController {
         if (!$form->isValid()) {
             $model = new ViewModel(array(
                 'error' => true,
+                'type' => 'default',
                 'form'  => $form,
             ));
             $model->setTemplate('users/register/index');
@@ -45,7 +46,15 @@ class RegisterController extends AbstractActionController {
         }
 
         // Create user
-        $this->createUser($form->getData());
+        if (!$this->createUser($form->getData())) {
+            $model = new ViewModel(array(
+                'error' => true,
+                'type' => 'username',
+                'form'  => $form,
+            ));
+            $model->setTemplate('users/register/index');
+            return $model;
+        }
         return $this->redirect()->toRoute(NULL , array(
             'controller' => 'register',
             'action' =>  'confirm'
@@ -64,8 +73,14 @@ class RegisterController extends AbstractActionController {
         $user->exchangeArray($data);
         $user->registerdate = date("Y-m-d H:i:s",time());
 
+        /* @var $userTable  \Users\Model\UserTable  */
         $userTable = $this->getServiceLocator()->get('UserTable');
-        $userTable->saveUser($user);
+        try {
+            $userTable->getUserByName($user->name);
+            return false;
+        } catch (\Exception $e) {
+            $userTable->saveUser($user);
+        }
 
         return true;
     }

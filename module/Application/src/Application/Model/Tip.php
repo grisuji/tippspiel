@@ -14,6 +14,7 @@ class Tip
     public $matchid;
     public $team1tip;
     public $team2tip;
+    public $points;
 
 
     public function exchangeArray($data)

@@ -9,6 +9,7 @@
 namespace Application\Model;
 
 use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\ResultSet\ResultInterface;
 use Zend\Db\Sql\Where;
 use Zend\Db\TableGateway\TableGateway;
 use Exception;
@@ -66,14 +67,28 @@ class MatchTable {
         $select->where($where);
         $select->order('date_time, id');
         $resultset = $this->tableGateway->selectWith($select);
-        #Debug::Dump($select->getSqlString());
-        #foreach($resultset as $row) {
-        #    Debug::Dump($row);
-        #}
         $rs = new ResultSet();
         $rs->initialize($resultset);
         $rs->buffer();
         return $rs;
     }
 
+    /**
+     * @return int
+     */
+    public function getDayOfNextMatch()
+    {
+        $select = $this->tableGateway->getSql()->select();
+        $select->columns(array('date_time', 'groupid', 'isfinished' ));
+        $select->where(array('isfinished' => 0));
+        $select->order('date_time');
+        $select->limit(1);
+
+        $result = $this->tableGateway->selectWith($select);
+        $match = $result->current();
+        if ($match) {
+            return $match->day;
+        }
+        return "1";
+    }
 }

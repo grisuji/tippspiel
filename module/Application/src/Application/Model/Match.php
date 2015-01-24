@@ -22,6 +22,8 @@ class Match {
     public $userid;
     public $team1tip;
     public $team2tip;
+    public $day;
+    public $points;
 
     public function exchangeArray($data)
     {
@@ -38,6 +40,7 @@ class Match {
         $this->team1tip = (isset($data['team1tip'])) ? $data['team1tip'] : "";
         $this->team2tip = (isset($data['team2tip'])) ? $data['team2tip'] : "";
         $this->start = (isset($data['date_time'])) ? $data['date_time'] : null;
+        $this->day = (isset($data['groupid'])) ? $data['groupid'] : null;
     }
 
     public function getArrayCopy()

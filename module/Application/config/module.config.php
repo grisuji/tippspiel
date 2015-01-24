@@ -40,14 +40,31 @@ return array(
                         'type'    => 'Segment',
                         'may_terminate' => true,
                         'options' => array(
-                            'route'    => '/deliver[/:action][/:param]',
+                            'route'    => '/deliver[/:action]',
                             'constraints' => array(
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'param'     => '[0-9]*',
                             ),
                             'defaults' => array(
                                 'controller' => 'Application\Controller\Deliver',
                                 'action'     => 'index',
+                            ),
+                        ),
+                    ),
+                    'userpoints' => array(
+                        'type'    => 'Segment',
+                        'may_terminate' => true,
+                        'options' => array(
+                            'route'    => '/userpoints[/:action][/:day][/:userid]',
+                            'constraints' => array(
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'userid'    => '[0-9]+',
+                                'day'     => '[0-9]+',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\Userpoints',
+                                'action'     => 'index',
+                                'day'    => '1',
+                                'userid'    => '2'
                             ),
                         ),
                     ),
@@ -90,6 +107,7 @@ return array(
         'invokables' => array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
             'Application\Controller\Deliver' => 'Application\Controller\DeliverController',
+            'Application\Controller\Userpoints' => 'Application\Controller\UserpointsController'
         ),
     ),
     'view_manager' => array(

@@ -17,7 +17,7 @@ use Zend\Debug\Debug;
 class DeliverController extends AbstractActionController {
     protected $storage;
     protected $authservice;
-    protected $day = 1;
+    protected $day;
 
     public function getAuthService()
     {
@@ -51,17 +51,31 @@ class DeliverController extends AbstractActionController {
 #                Debug::dump($this->day);exit;
             }
         }
+        $matchTable = $this->getServiceLocator()->get('MatchTable');
 
         if (is_null($this->day)) {
-            $this->day = 1;
+            $this->day = $matchTable->getDayOfNextMatch();
         }
-        $matchTable = $this->getServiceLocator()->get('MatchTable');
         $matches = $matchTable->getUserMatchesByDay($userid, $this->day);
         $tipTable = $this->getServiceLocator()->get('TipTable');
 
         $index = 0;
         $data = array();
         $form = new DeliverForm($this->day);
+        #$form = $this->getServiceLocator()->get('DeliverForm');
+        #if ($post) {
+        #    $form->setData($request->getPost());
+        #    if (!$form->isValid()) {
+        #        $model = new ViewModel(array(
+        #            'error' => true,
+        #            'type' => 'default',
+        #            'form' => $form,
+        #        ));
+        #        $model->setTemplate('application/deliver/index');
+        #        return $model;
+        #    }
+        #}
+
         $now = new DateTime();
         foreach($matches as $m) {
             $index++;

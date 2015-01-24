@@ -1,8 +1,12 @@
 <section class="register">
     <h2>Registrierung</h2>
-    <?php if ($this->error): ?>
+    <?php if ($this->error and $this->type == "default"): ?>
         <p class="error">
             Es sind ein oder mehrere Fehler bei der Registrierung aufgretreten. Bitte behebe sie bei den markierten Feldern und versuche es noch einmal.
+        </p>
+    <?php elseif ($this->error and $this->type == "username"):?>
+        <p class="error">
+            Der gewählte Username ist schon vergeben. Bitte wähle einen anderen.
         </p>
     <?php endif ?>
     <?php

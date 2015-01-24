@@ -3,8 +3,13 @@ body {
     padding-bottom: 40px;
 }
 
-.zf-green {
+.ts-green {
     color: #68b604;
+}
+
+.error {
+    color: #D8000C;
+    background-color: #FFBABA;
 }
 
 .btn-success {

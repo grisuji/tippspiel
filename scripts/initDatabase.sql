@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS user (
   UNIQUE KEY (name)
 );
 
-INSERT INTO user (id, name, email, password) VALUES (1, 'admin', 'grisuji@gmx.de','21232f297a57a5a743894a0e4a801fc3');
+INSERT INTO user (id, name, email, password) VALUES (1, 'admin', 'grisuji@gmx.de','c340a1c3d49035e0a04a85f187471a10');
 
 CREATE TABLE IF NOT EXISTS tips (
   id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
