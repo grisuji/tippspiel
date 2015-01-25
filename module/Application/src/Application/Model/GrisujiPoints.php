@@ -24,7 +24,7 @@ class GrisujiPoints extends AbstractPoints {
      */
     public function getPoints($result1, $result2, $tip1, $tip2)
     {
-        if ($result1 < 0  or $result2 < 0 or is_null($tip1) or is_null($tip2)){
+        if ($result1 < 0  or $result2 < 0 or empty($tip1) or empty($tip2)){
             return 0;
         }
         if ($this->isEqual($result1, $result2, $tip1, $tip2)){

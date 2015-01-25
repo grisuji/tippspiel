@@ -7,8 +7,8 @@
     $form1->setAttribute('action', $this->url(NULL,array('controller'=>'userpoints', 'action'=>'process')));
     $form1->setAttribute('method', 'post');
     echo $this->form()->openTag($form1);
-    echo $this->formElement($form1->get('dayselect'));
-    echo $this->formElement($form1->get('hiddenuserid'));
+    echo $this->formElement($form1->get('selected_day'));
+    echo $this->formElement($form1->get('hidden_userid'));
     echo $this->form()->closeTag($form1);
     ?>
 
@@ -18,8 +18,8 @@
     $form2->setAttribute('action', $this->url(NULL,array('controller'=>'userpoints', 'action'=>'process')));
     $form2->setAttribute('method', 'post');
     echo $this->form()->openTag($form2);
-    echo $this->formElement($form2->get('hiddenday'));
-    echo $this->formElement($form2->get('useridselect'));
+    echo $this->formElement($form2->get('hidden_day'));
+    echo $this->formElement($form2->get('selected_userid'));
     echo $this->form()->closeTag($form2);
     ?>
 

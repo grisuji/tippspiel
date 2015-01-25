@@ -9,6 +9,7 @@
 namespace Application\Controller;
 
 use Application\Form\UserpointsForm;
+use Zend\Debug\Debug;
 use Zend\Mvc\Controller\AbstractActionController;
 use Application\Model\GrisujiPoints;
 use Zend\View\Model\ViewModel;
@@ -29,25 +30,24 @@ class UserpointsController extends AbstractActionController{
     {
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $userid = $this->request->getPost('selectuserid');
-            $day = $this->request->getPost('selectday');
+            $userid = $this->request->getPost('selected_userid');
+            $day = $this->request->getPost('selected_day');
             /* get the values from hidden-fields */
             if (empty($day)) {
-                $day = $this->request->getPost('hiddenday');
+                $day = $this->request->getPost('hidden_day');
             }
             if (empty($userid)) {
-                $userid = $this->request->getPost('hiddenuserid');
+                $userid = $this->request->getPost('hidden_userid');
             }
         } else {
             $userid = 2;
             $day = 1;
         }
         /* now redirect */
-        return $this->redirect()->toRoute(NULL , array(
-            'controller' => 'userpoints',
+        return $this->redirect()->toRoute('application/userpoints' , array(
             'action' =>  'index',
             'day' => $day,
-            'userid' => $userid
+            'user' => $userid
         ));
     }
 
@@ -78,7 +78,9 @@ class UserpointsController extends AbstractActionController{
         $users = $userTable->fetchAll();
         $userlist = array();
         foreach($users as $u) {
-            $userlist[$u->id] = $u->name;
+            if ($u->id > 1) { #skip admin
+                $userlist[$u->id] = $u->name;
+            }
         }
         $form = new UserpointsForm($day, $userid, $userlist);
         foreach ($matches as $m) {

@@ -54,17 +54,15 @@ return array(
                         'type'    => 'Segment',
                         'may_terminate' => true,
                         'options' => array(
-                            'route'    => '/userpoints[/:action][/:day][/:userid]',
+                            'route'    => '/userpoints[/:action][/:user][/:day]',
                             'constraints' => array(
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'userid'    => '[0-9]+',
-                                'day'     => '[0-9]+',
+                                'user'       => '[0-9]+',
+                                'day'        => '[0-9]+'
                             ),
                             'defaults' => array(
                                 'controller' => 'Application\Controller\Userpoints',
                                 'action'     => 'index',
-                                'day'    => '1',
-                                'userid'    => '2'
                             ),
                         ),
                     ),

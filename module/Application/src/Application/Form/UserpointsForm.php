@@ -20,7 +20,7 @@ class UserpointsForm extends Form {
 
         $this->add(array(
                 'type' => 'hidden',
-                'name' => 'hiddenday',
+                'name' => 'hidden_day',
                 'attributes' => array(
                     'value' => $day
                 )
@@ -29,7 +29,7 @@ class UserpointsForm extends Form {
 
         $this->add(array(
                 'type' => 'hidden',
-                'name' => 'hiddenuserid',
+                'name' => 'hidden_userid',
                 'attributes' => array(
                     'value' => $userid
                 )
@@ -38,9 +38,9 @@ class UserpointsForm extends Form {
 
         $this->add(array(
                 'type' => 'select',
-                'name' => 'dayselect',
+                'name' => 'selected_day',
                 'attributes' => array(
-                    'onchange' => 'document.getElementById("Userpoints").submit();',
+                    'onchange' => 'document.forms[0].submit();',
                     'value' => $day //set checked to '1'
                 ),
                 'options' => array(
@@ -87,9 +87,9 @@ class UserpointsForm extends Form {
 
         $this->add(array(
                 'type' => 'select',
-                'name' => 'useridselect',
+                'name' => 'selected_userid',
                 'attributes' => array(
-                    'onchange' => 'document.getElementById("Userpoints").submit();',
+                    'onchange' => 'document.forms[1].submit();',
                     'value' => $userid
                 ),
                 'options' => array(

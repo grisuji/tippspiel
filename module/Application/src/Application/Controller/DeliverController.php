@@ -89,8 +89,8 @@ class DeliverController extends AbstractActionController {
                     $tip2 = $this->request->getPost('match' . $index . '_team2');
 
                     if ($m->team1tip != $tip1 or $m->team1tip != $tip2) {
-                        if (!empty($tip1)) $m->team1tip = $tip1;
-                        if (!empty($tip2)) $m->team2tip = $tip2;
+                        if ($tip1!="") $m->team1tip = $tip1;
+                        if ($tip2!="") $m->team2tip = $tip2;
                         $m->userid = $userid;
                         $tipTable->saveTip($m);
                     }
