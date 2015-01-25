@@ -40,7 +40,7 @@ class UserpointsForm extends Form {
                 'type' => 'select',
                 'name' => 'selected_day',
                 'attributes' => array(
-                    'onchange' => 'document.forms[0].submit();',
+                    'onchange' => 'document.forms[1].submit();',
                     'value' => $day //set checked to '1'
                 ),
                 'options' => array(
@@ -89,7 +89,7 @@ class UserpointsForm extends Form {
                 'type' => 'select',
                 'name' => 'selected_userid',
                 'attributes' => array(
-                    'onchange' => 'document.forms[1].submit();',
+                    'onchange' => 'document.forms[0].submit();',
                     'value' => $userid
                 ),
                 'options' => array(

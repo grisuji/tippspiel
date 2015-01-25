@@ -66,6 +66,20 @@ return array(
                             ),
                         ),
                     ),
+                    'static' => array(
+                        'type'    => 'Segment',
+                        'may_terminate' => true,
+                        'options' => array(
+                            'route'    => '/static/:action',
+                            'constraints' => array(
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\Static',
+                                'action'     => 'impressum'
+                            ),
+                        ),
+                    ),
                     'default' => array(
                         'type'    => 'Segment',
                         'options' => array(
@@ -105,7 +119,8 @@ return array(
         'invokables' => array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
             'Application\Controller\Deliver' => 'Application\Controller\DeliverController',
-            'Application\Controller\Userpoints' => 'Application\Controller\UserpointsController'
+            'Application\Controller\Userpoints' => 'Application\Controller\UserpointsController',
+            'Application\Controller\Static' => 'Application\Controller\StaticController'
         ),
     ),
     'view_manager' => array(

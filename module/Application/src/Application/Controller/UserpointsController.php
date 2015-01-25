@@ -13,6 +13,7 @@ use Zend\Debug\Debug;
 use Zend\Mvc\Controller\AbstractActionController;
 use Application\Model\GrisujiPoints;
 use Zend\View\Model\ViewModel;
+use DateTime;
 
 class UserpointsController extends AbstractActionController{
     protected $authservice;
@@ -56,6 +57,7 @@ class UserpointsController extends AbstractActionController{
         $pointhelper = new GrisujiPoints();
         $userid = $this->getEvent()->getRouteMatch()->getParam('userid');
         $day = $this->getEvent()->getRouteMatch()->getParam('day');
+
         if (empty($userid)) {
             if($this->getAuthService()->hasIdentity()) {
                 $userid = $this->getAuthService()->getStorage()->read()->id;
@@ -63,6 +65,7 @@ class UserpointsController extends AbstractActionController{
                 $userid = 2;
             }
         }
+
         /* @var $m \Application\Model\Match  */
         /* @var $matchTable \Application\Model\MatchTable  */
         /* @var $u \Users\Model\User */
@@ -83,7 +86,14 @@ class UserpointsController extends AbstractActionController{
             }
         }
         $form = new UserpointsForm($day, $userid, $userlist);
+
+        $now = new DateTime();
         foreach ($matches as $m) {
+            $start = new DateTime($m->start);
+            if ($now->getTimestamp() <= $start->getTimestamp()) {
+                $m->team1tip = "";
+                $m->team2tip = "";
+            }
             $m->points = $pointhelper->getPoints($m->team1goals, $m->team2goals, $m->team1tip, $m->team2tip);
         }
         $viewModel = new viewModel(array('matches' => $matches, 'form' => $form));

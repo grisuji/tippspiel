@@ -1,29 +1,39 @@
 <section class="userpoints">
     <h2>Spielerpunkte</h2>
-
-    <?php
-    $form1 = $this->form;
-    $form1->prepare();
-    $form1->setAttribute('action', $this->url(NULL,array('controller'=>'userpoints', 'action'=>'process')));
-    $form1->setAttribute('method', 'post');
-    echo $this->form()->openTag($form1);
-    echo $this->formElement($form1->get('selected_day'));
-    echo $this->formElement($form1->get('hidden_userid'));
-    echo $this->form()->closeTag($form1);
-    ?>
-
-    <?php
-    $form2 = $this->form;
-    $form2->prepare();
-    $form2->setAttribute('action', $this->url(NULL,array('controller'=>'userpoints', 'action'=>'process')));
-    $form2->setAttribute('method', 'post');
-    echo $this->form()->openTag($form2);
-    echo $this->formElement($form2->get('hidden_day'));
-    echo $this->formElement($form2->get('selected_userid'));
-    echo $this->form()->closeTag($form2);
-    ?>
-
     <table class="table">
+        <tr>
+            <td>
+                Auswahl des Spielers:
+            </td>
+            <td>
+                <?php
+                $form2 = $this->form;
+                $form2->prepare();
+                $form2->setAttribute('action', $this->url(NULL,array('controller'=>'userpoints', 'action'=>'process')));
+                $form2->setAttribute('method', 'post');
+                echo $this->form()->openTag($form2);
+                echo $this->formElement($form2->get('hidden_day'));
+                echo $this->formElement($form2->get('selected_userid'));
+                echo $this->form()->closeTag($form2);
+                ?>
+            </td>
+            <td>
+                Auswahl des Spielertags:
+            </td>
+            <td>
+                <?php $form1 = $this->form;
+                $form1->prepare();
+                $form1->setAttribute('action', $this->url(NULL,array('controller'=>'userpoints', 'action'=>'process')));
+                $form1->setAttribute('method', 'post');
+                echo $this->form()->openTag($form1);
+                echo $this->formElement($form1->get('selected_day'));
+                echo $this->formElement($form1->get('hidden_userid'));
+                echo $this->form()->closeTag($form1);
+                ?>
+            </td>
+        </tr>
+    </table>
+        <table class="table">
         <tr>
             <th>Spielbeginn</th>
             <th>Heimmannschaft</th>

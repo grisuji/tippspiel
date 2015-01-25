@@ -30,8 +30,8 @@ class Match {
         $this->id = (isset($data['id'])) ? $data['id'] : null;
         $this->team1name = (isset($data['team1name'])) ? $data['team1name'] : null;
         $this->team2name = (isset($data['team2name'])) ? $data['team2name'] : null;
-        $this->team1goals = (isset($data['team1goals'])) ? $data['team1goals'] : null;
-        $this->team2goals = (isset($data['team2goals'])) ? $data['team2goals'] : null;
+        $this->team1goals = (isset($data['team1goals']) and $data['team1goals']>=0) ? $data['team1goals'] : "";
+        $this->team2goals = (isset($data['team2goals']) and $data['team2goals']>=0) ? $data['team2goals'] : "";
         $this->team1emblem = (isset($data['team1emblem'])) ? $data['team1emblem'] : null;
         $this->team2emblem = (isset($data['team2emblem'])) ? $data['team2emblem'] : null;
         $this->isfinished = (isset($data['isfinished'])) ? $data['isfinished'] : null;

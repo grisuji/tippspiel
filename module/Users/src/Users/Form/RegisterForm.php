@@ -8,6 +8,8 @@
 
 namespace Users\Form;
 use Zend\Form\Form;
+use Zend\Form\Element\Captcha;
+use Zend\Captcha\Image as CaptchaImage;
 
 class RegisterForm extends Form
 {
