@@ -80,6 +80,20 @@ return array(
                             ),
                         ),
                     ),
+                    'rank' => array(
+                        'type'    => 'Segment',
+                        'may_terminate' => true,
+                        'options' => array(
+                            'route'    => '/rank/:action',
+                            'constraints' => array(
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\Rank',
+                                'action'     => 'index'
+                            ),
+                        ),
+                    ),
                     'default' => array(
                         'type'    => 'Segment',
                         'options' => array(
@@ -120,7 +134,8 @@ return array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
             'Application\Controller\Deliver' => 'Application\Controller\DeliverController',
             'Application\Controller\Userpoints' => 'Application\Controller\UserpointsController',
-            'Application\Controller\Static' => 'Application\Controller\StaticController'
+            'Application\Controller\Static' => 'Application\Controller\StaticController',
+            'Application\Controller\Rank' => 'Application\Controller\RankController'
         ),
     ),
     'view_manager' => array(

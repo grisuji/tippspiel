@@ -11,6 +11,7 @@ namespace Application\Model;
 class Match {
     public $id;
     public $start;
+    public $day;
     public $team1name;
     public $team2name;
     public $team1goals;
@@ -18,12 +19,12 @@ class Match {
     public $team1emblem;
     public $team2emblem;
     public $isfinished;
+    // here comes the tipp-data
     public $tipid;
     public $userid;
+    public $username;
     public $team1tip;
     public $team2tip;
-    public $day;
-    public $points;
 
     public function exchangeArray($data)
     {
@@ -37,6 +38,7 @@ class Match {
         $this->isfinished = (isset($data['isfinished'])) ? $data['isfinished'] : null;
         $this->tipid = (isset($data['tipid'])) ? $data['tipid'] : null;
         $this->userid = (isset($data['userid'])) ? $data['userid'] : null;
+        $this->username = (isset($data['username'])) ? $data['username'] : null;
         $this->team1tip = (isset($data['team1tip'])) ? $data['team1tip'] : "";
         $this->team2tip = (isset($data['team2tip'])) ? $data['team2tip'] : "";
         $this->start = (isset($data['date_time'])) ? $data['date_time'] : null;

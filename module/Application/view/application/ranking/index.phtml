@@ -1,0 +1,25 @@
+<section class="ranking">
+    <h2>Tabelle</h2>
+    <table class="table">
+        <tr>
+            <th>Platz</th>
+            <th>Spieler</th>
+            <th>Punkte</th>
+        </tr>
+        <?php $platz=0;
+                foreach($this->user as $id => $u){
+                    $platz++; ?>
+            <tr>
+                <td>
+                    <?php echo $platz; ?>
+                </td>
+                <td>
+                    <a href="<?php echo $this->url('application/userpoints', array('userid' => $id)) ?>"><?php echo $this->escapeHtml($u['name']);?></a>
+                </td>
+                <td>
+                    <?php echo $this->escapeHtml($u['points']);?>
+                </td>
+            </tr>
+        <?php } ?>
+    </table>
+</section>

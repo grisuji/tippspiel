@@ -39,8 +39,6 @@
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li ><a href="<?php echo $this->url('application/userpoints') ?>"><?php echo $this->translate('Punkte') ?></a></li>
-                        <li ><a href="<?php echo $this->url('application/static', array('action' => 'impressum')) ?>"><?php echo $this->translate('Impressum') ?></a></li>
-                        <li ><a href="<?php echo $this->url('application/static', array('action' => 'rules')) ?>"><?php echo $this->translate('Regeln') ?></a></li>
                         <?php if ($user = $this->identity() and $user->name == "admin") { ?>
                             <li ><a href="<?php echo $this->url('users/user-manager') ?>"><?php echo $this->translate('Manage Users') ?></a></li>
                         <?php } ?>
@@ -50,6 +48,8 @@
                         <?php } else { ?>
                             <li ><a href="<?php echo $this->url('users/login') ?>"><?php echo $this->translate('Login') ?></a></li>
                         <?php } ?>
+                        <li ><a href="<?php echo $this->url('application/static', array('action' => 'rules')) ?>"><?php echo $this->translate('Regeln') ?></a></li>
+                        <li ><a href="<?php echo $this->url('application/static', array('action' => 'impressum')) ?>"><?php echo $this->translate('Impressum') ?></a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>

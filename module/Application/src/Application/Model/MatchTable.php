@@ -73,6 +73,20 @@ class MatchTable {
         return $rs;
     }
 
+    public function getSaisonMatches($saison)
+    {
+        $select = $this->tableGateway->getSql()->select();
+        $select->columns(array('id', 'league', 'saison', 'date_time', 'team1goals', 'team2goals', 'isfinished',  ));
+        $select->join('tips', 'matchid=matches.id', array('tipid'=>'id', 'userid', 'team1tip', 'team2tip'), 'left');
+        $select->join('user', 'user.id=tips.userid', array('username' => 'name'),'left');
+        $select->where(array('saison' => (int) $saison));
+        $resultset = $this->tableGateway->selectWith($select);
+        $rs = new ResultSet();
+        $rs->initialize($resultset);
+        $rs->buffer();
+        return $rs;
+    }
+
     /**
      * @return int
      */
