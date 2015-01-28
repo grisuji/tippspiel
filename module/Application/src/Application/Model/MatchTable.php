@@ -10,6 +10,7 @@ namespace Application\Model;
 
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\ResultSet\ResultInterface;
+use Zend\Db\Sql\Expression;
 use Zend\Db\Sql\Where;
 use Zend\Db\TableGateway\TableGateway;
 use Exception;
@@ -56,7 +57,8 @@ class MatchTable {
         $select->columns(array('id', 'league', 'saison', 'date_time', 'groupid', 'team1goals', 'team2goals', 'isfinished' ));
         $select->join(array('team1' => 'teams'), 'team1.id=matches.team1id', array('team1name' => 'longname', 'team1emblem' => 'emblem'), 'left');
         $select->join(array('team2' => 'teams'), 'team2.id=matches.team2id', array('team2name' => 'longname', 'team2emblem' => 'emblem'),'left');
-        $select->join('tips', 'matchid=matches.id', array('tipid'=>'id', 'userid', 'team1tip', 'team2tip'), 'left');
+        $expression = new Expression('matchid=matches.id AND userid='.$userid);
+        $select->join('tips', $expression, array('tipid'=>'id', 'userid', 'team1tip', 'team2tip'), $select::JOIN_LEFT);
         $where = new Where();
         $where->equalTo('groupid',(int) $day)
             ->AND

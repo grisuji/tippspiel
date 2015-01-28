@@ -58,7 +58,6 @@ class DeliverController extends AbstractActionController {
         }
         $matches = $matchTable->getUserMatchesByDay($userid, $this->day);
         $tipTable = $this->getServiceLocator()->get('TipTable');
-
         $index = 0;
         $data = array();
         $form = new DeliverForm($this->day);
