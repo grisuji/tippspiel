@@ -54,7 +54,7 @@ return array(
                         'type'    => 'Segment',
                         'may_terminate' => true,
                         'options' => array(
-                            'route'    => '/userpoints[/:action][/:user][/:day]',
+                            'route'    => '/userpoints[/:action][/:userid][/:day]',
                             'constraints' => array(
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
                                 'user'       => '[0-9]+',

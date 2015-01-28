@@ -48,7 +48,7 @@ class UserpointsController extends AbstractActionController{
         return $this->redirect()->toRoute('application/userpoints' , array(
             'action' =>  'index',
             'day' => $day,
-            'user' => $userid
+            'userid' => $userid
         ));
     }
 
