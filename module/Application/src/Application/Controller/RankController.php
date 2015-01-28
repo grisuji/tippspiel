@@ -26,11 +26,10 @@ class RankController  extends AbstractActionController{
 
 
         $matchTable = $this->getServiceLocator()->get('MatchTable');
-        $matches = $matchTable->getSaisonMatches(2014);
-        Debug::dump($matches);
-        exit;
+        $matches = $matchTable->getSaisonTipsAndMatches(2014);
         $user = array();
         foreach($matches as $m) {
+            if ($m->userid < 2) continue;
             if (!isset($user[$m->userid]))
             {
                 $user[$m->userid] = array('name' => $m->username, 'points' => 0);
