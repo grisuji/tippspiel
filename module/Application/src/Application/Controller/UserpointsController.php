@@ -52,16 +52,23 @@ class UserpointsController extends AbstractActionController{
         ));
     }
 
+
     public function indexAction()
     {
         $pointhelper = new GrisujiPoints();
         $userid = $this->getEvent()->getRouteMatch()->getParam('userid');
         $day = $this->getEvent()->getRouteMatch()->getParam('day');
 
+        $logged_in_id = 0;
+        if($this->getAuthService()->hasIdentity()) {
+            $logged_in_id = $this->getAuthService()->getStorage()->read()->id;
+        }
+
         if (empty($userid)) {
-            if($this->getAuthService()->hasIdentity()) {
-                $userid = $this->getAuthService()->getStorage()->read()->id;
-            } else {
+            if ($logged_in_id > 1) {
+                $userid = $logged_in_id;
+            }
+             else {
                 $userid = 2;
             }
         }
@@ -90,7 +97,7 @@ class UserpointsController extends AbstractActionController{
         $now = new DateTime();
         foreach ($matches as $m) {
             $start = new DateTime($m->start);
-            if ($now->getTimestamp() <= $start->getTimestamp()) {
+            if ($now->getTimestamp() <= $start->getTimestamp() and $userid != $logged_in_id) {
                 $m->team1tip = "";
                 $m->team2tip = "";
             }

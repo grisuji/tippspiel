@@ -13,6 +13,8 @@ use Zend\Db\ResultSet\ResultInterface;
 use Zend\Db\Sql\Expression;
 use Zend\Db\Sql\Where;
 use Zend\Db\TableGateway\TableGateway;
+use DateTime;
+use DateInterval;
 use Exception;
 use Zend\Debug\Debug;
 
@@ -78,7 +80,7 @@ class MatchTable {
     public function getSaisonTipsAndMatches($saison)
     {
         $select = $this->tableGateway->getSql()->select();
-        $select->columns(array('id', 'league', 'saison', 'date_time', 'team1goals', 'team2goals', 'isfinished',  ));
+        $select->columns(array('id', 'league', 'saison', 'groupid', 'date_time', 'team1goals', 'team2goals', 'isfinished',  ));
         $select->join('tips', 'matchid=matches.id', array('tipid'=>'id', 'userid', 'team1tip', 'team2tip'), 'left');
         $select->join('user', 'user.id=tips.userid', array('username' => 'name'),'left');
         $where = new Where();
@@ -94,10 +96,14 @@ class MatchTable {
     }
 
     /**
+     * checks the day of the next unfinished match.
+     * If it more than 24h in the future, the day-1
+     * is given.
      * @return int
      */
     public function getDayOfNextMatch()
     {
+        /* @var $match \Application\Model\Match  */
         $select = $this->tableGateway->getSql()->select();
         $select->columns(array('date_time', 'groupid', 'isfinished' ));
         $select->where(array('isfinished' => 0));
@@ -107,8 +113,14 @@ class MatchTable {
         $result = $this->tableGateway->selectWith($select);
         $match = $result->current();
         if ($match) {
+            $border = new DateTime();
+            $border->add(new DateInterval("P1D"));
+            if ($border->getTimestamp() < $match->start and $match->day > 1) {
+                return $match->day-1;
+            }
             return $match->day;
         }
+
         return "1";
     }
 }
