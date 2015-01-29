@@ -25,10 +25,12 @@ class RankController  extends AbstractActionController{
     }
 
     private static function cmp_name($a, $b) {
-        if ($a['name'] == $b['name']) {
+        $n1 = strtoupper($a['name']);
+        $n2 = strtoupper($b['name']);
+        if ($n1 == $n2) {
             return 0;
         } else {
-            return ($a['name'] > $b['name']) ? -1 : 1;
+            return ($n1 > $n2) ? -1 : 1;
         }
     }
 
