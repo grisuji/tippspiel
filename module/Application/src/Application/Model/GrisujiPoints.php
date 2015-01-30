@@ -39,7 +39,7 @@ class GrisujiPoints extends AbstractPoints {
         return (max(GrisujiPoints::MIN, $points-(
                 $this->diff($result1-$tip1)+
                 $this->diff($result2-$tip2)+
-                2*$this->diff(($result2-$result1)-($tip2-$tip1))
+                $this->diff(($result2-$result1)-($tip2-$tip1))
             )));
     }
 
