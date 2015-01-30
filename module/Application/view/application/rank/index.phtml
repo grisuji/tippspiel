@@ -20,7 +20,7 @@
                     <?php echo $platz; ?>
                 </td>
                 <td>
-                    <a href="<?php echo $this->url('application/userpoints', array('userid' => $id)) ?>"><?php echo $this->escapeHtml($u['name']);?></a>
+                    <a href="<?php echo $this->url('application/userpoints', array('userid' => $u['id'], 'day' => $this->day)) ?>"><?php echo $this->escapeHtml($u['name']);?></a>
                 </td>
                 <td>
                     <?php echo $this->escapeHtml($u[$this->day]);?>

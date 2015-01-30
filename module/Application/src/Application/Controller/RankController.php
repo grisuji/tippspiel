@@ -51,7 +51,10 @@ class RankController  extends AbstractActionController{
             if ($m->userid < 2) continue;
             if (!isset($user[$m->userid]))
             {
-                $user[$m->userid] = array('name' => $m->username, 'points' => 0 , $day => 0);
+                $user[$m->userid] = array('name' => $m->username,
+                                        'points' => 0,
+                                        $day => 0,
+                                        'id' => $m->userid);
             }
             $points = $pointhelper->getPoints($m->team1goals,
                 $m->team2goals,
