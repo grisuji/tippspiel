@@ -20,7 +20,7 @@ class RankController  extends AbstractActionController{
         if ($a['points'] == $b['points']) {
             return RankController::cmp_name($a, $b);
         } else {
-            return ($a['points'] < $b['points']) ? -1 : 1;
+            return ($a['points'] > $b['points']) ? -1 : 1;
         }
     }
 
