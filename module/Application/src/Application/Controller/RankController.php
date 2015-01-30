@@ -64,7 +64,7 @@ class RankController  extends AbstractActionController{
             $user[$m->userid][$m->day] += $points;
             $user[$m->userid]['points'] += $points;
         }
-        usort($user, array($this,"cmp_name"));
+#        usort($user, array($this,"cmp_name"));
         usort($user, array($this, "cmp_points"));
         $view = new ViewModel(array('user'=>$user, 'day'=>$day));
         return $view;
