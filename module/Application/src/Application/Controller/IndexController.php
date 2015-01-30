@@ -17,8 +17,8 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-        return $this->redirect()->toRoute('users/login' , array(
-            'controller' => 'login',
+        return $this->redirect()->toRoute('application/rank' , array(
+            'controller' => 'rank',
             'action' =>  'index'
         ));
     }
