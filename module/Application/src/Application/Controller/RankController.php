@@ -18,9 +18,9 @@ class RankController  extends AbstractActionController{
 
     private static function cmp_points($a, $b) {
         if ($a['points'] == $b['points']) {
-            return 0;
+            return RankController::cmp_name($a, $b);
         } else {
-            return ($a['points'] > $b['points']) ? -1 : 1;
+            return ($a['points'] < $b['points']) ? -1 : 1;
         }
     }
 
@@ -30,7 +30,7 @@ class RankController  extends AbstractActionController{
         if ($n1 == $n2) {
             return 0;
         } else {
-            return ($n1 > $n2) ? -1 : 1;
+            return ($n1 < $n2) ? -1 : 1;
         }
     }
 
