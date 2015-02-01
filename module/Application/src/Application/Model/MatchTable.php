@@ -113,9 +113,10 @@ class MatchTable {
         $result = $this->tableGateway->selectWith($select);
         $match = $result->current();
         if ($match) {
+            $start = new DateTime($match->start);
             $border = new DateTime();
             $border->add(new DateInterval("P1D"));
-            if ($border->getTimestamp() < $match->start and $match->day > 1) {
+            if ($border->getTimestamp() < $start->getTimestamp() and $match->day > 1) {
                 return $match->day-1;
             }
             return $match->day;
