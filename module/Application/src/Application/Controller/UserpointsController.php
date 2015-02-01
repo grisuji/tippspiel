@@ -101,6 +101,14 @@ class UserpointsController extends AbstractActionController{
                 $m->team1tip = "";
                 $m->team2tip = "";
             }
+            if ($now->getTimestamp() > $start->getTimestamp()) {
+                if ($m->team1goals == "") {
+                    $m->team1goals = 0;
+                }
+                if ($m->team2goals == "") {
+                    $m->team2goals = 0;
+                }
+            }
             $m->points = $pointhelper->getPoints($m->team1goals, $m->team2goals, $m->team1tip, $m->team2tip);
         }
         $viewModel = new viewModel(array('matches' => $matches, 'form' => $form));
