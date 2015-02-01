@@ -47,8 +47,20 @@ class RankController  extends AbstractActionController{
         $day = $matchTable->getDayOfNextMatch();
         $matches = $matchTable->getSaisonTipsAndMatches(2014);
         $user = array();
+
+#        $now = new DateTime();
         foreach($matches as $m) {
             if ($m->userid < 2) continue;
+#            $start = new DateTime($m->start);
+#            if ($now->getTimestamp() > $start->getTimestamp()) {
+#                if ($m->team1goals == "") {
+#                    $m->team1goals = 0;
+#                }
+#                if ($m->team2goals == "") {
+#                    $m->team2goals = 0;
+#                }
+#            }
+
             if (!isset($user[$m->userid]))
             {
                 $user[$m->userid] = array('name' => $m->username,
