@@ -7,7 +7,8 @@
  */
 
 namespace Application\Controller;
-use Application\Model\GrisujiPoints;
+use Application\Rules\GrisujiPoints;
+use Application\Rules\ToddePoints;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use DateTime;
@@ -37,6 +38,8 @@ class RankController  extends AbstractActionController{
     public function indexAction(){
 
         $pointhelper = new GrisujiPoints();
+        $toddehelper = new ToddePoints();
+
         /* @var $m \Application\Model\Match  */
         /* @var $matchTable \Application\Model\MatchTable  */
         /* @var $u \Users\Model\User */
@@ -48,35 +51,28 @@ class RankController  extends AbstractActionController{
         $matches = $matchTable->getSaisonTipsAndMatches(2014);
         $user = array();
 
-#        $now = new DateTime();
         foreach($matches as $m) {
             if ($m->userid < 2) continue;
-#            $start = new DateTime($m->start);
-#            if ($now->getTimestamp() > $start->getTimestamp()) {
-#                if ($m->team1goals == "") {
-#                    $m->team1goals = 0;
-#                }
-#                if ($m->team2goals == "") {
-#                    $m->team2goals = 0;
-#                }
-#            }
 
             if (!isset($user[$m->userid]))
             {
                 $user[$m->userid] = array('name' => $m->username,
                                         'points' => 0,
+                                        'todde' => 0,
+                                        'todde_day' => 0,
                                         $day => 0,
                                         'id' => $m->userid);
             }
-            $points = $pointhelper->getPoints($m->team1goals,
-                $m->team2goals,
-                $m->team1tip,
-                $m->team2tip);
+            $points = $pointhelper->getPoints($m->team1goals, $m->team2goals, $m->team1tip, $m->team2tip);
+            $todde = $toddehelper->getPoints($m->team1goals, $m->team2goals, $m->team1tip, $m->team2tip);
 
             $user[$m->userid][$m->day] += $points;
             $user[$m->userid]['points'] += $points;
+            $user[$m->userid]['todde'] += $todde;
+            if ($day == $m->day) {
+                $user[$m->userid]['todde_day'] += $todde;
+            }
         }
-#        usort($user, array($this,"cmp_name"));
         usort($user, array($this, "cmp_points"));
         $view = new ViewModel(array('user'=>$user, 'day'=>$day));
         return $view;

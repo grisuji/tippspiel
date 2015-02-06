@@ -41,6 +41,7 @@
             <th>Ergebnis</th>
             <th>Tipp</th>
             <th>Punkte</th>
+            <th style="color:#A4A4A4">Todde</th>
         </tr>
         <?php $i=0; foreach ($matches as $m) :
             $i++;
@@ -55,13 +56,13 @@
                     <img src="<?php echo $this->basePath().'/img/emblem/'.$m->team2emblem;?>"/>
                     <?php echo $this->escapeHtml($m->team2name);?>
                 </td>
-                <td><?php
+                <td align="center"><?php
                     echo $this->escapeHtml($m->team1goals);
                     echo ' : ';
                     echo $this->escapeHtml($m->team2goals);
                     ?>
                 </td>
-                <td><?php
+                <td align="center"><?php
                     echo $this->escapeHtml($m->team1tip);
                     echo ' : ';
                     echo $this->escapeHtml($m->team2tip);
@@ -71,7 +72,10 @@
                     if ($m->points > 0) echo $this->escapeHtml($m->points);
                     ?>
                 </td>
-
+                <td style="color:#A4A4A4"><?php
+                    if ($m->toddepoints > 0) echo $this->escapeHtml($m->toddepoints);
+                    ?>
+                </td>
             </tr>
         <?php endforeach; ?>
     </table>

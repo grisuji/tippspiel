@@ -6,7 +6,7 @@
  * Time: 21:34
  */
 
-namespace Application\Model;
+namespace Application\Rules;
 
 class GrisujiPoints extends AbstractPoints {
     const EXACT = 8;

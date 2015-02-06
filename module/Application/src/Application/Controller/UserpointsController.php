@@ -11,7 +11,8 @@ namespace Application\Controller;
 use Application\Form\UserpointsForm;
 use Zend\Debug\Debug;
 use Zend\Mvc\Controller\AbstractActionController;
-use Application\Model\GrisujiPoints;
+use Application\Rules\GrisujiPoints;
+use Application\Rules\ToddePoints;
 use Zend\View\Model\ViewModel;
 use DateTime;
 
@@ -55,7 +56,8 @@ class UserpointsController extends AbstractActionController{
 
     public function indexAction()
     {
-        $pointhelper = new GrisujiPoints();
+        $grisuji_pointhelper = new GrisujiPoints();
+        $todde_pointhelper = new ToddePoints();
         $userid = $this->getEvent()->getRouteMatch()->getParam('userid');
         $day = $this->getEvent()->getRouteMatch()->getParam('day');
 
@@ -101,15 +103,8 @@ class UserpointsController extends AbstractActionController{
                 $m->team1tip = "";
                 $m->team2tip = "";
             }
-#            if ($now->getTimestamp() > $start->getTimestamp()) {
-#                if ($m->team1goals == "") {
-#                    $m->team1goals = 0;
-#                }
-#                if ($m->team2goals == "") {
-#                    $m->team2goals = 0;
-#                }
-#            }
-            $m->points = $pointhelper->getPoints($m->team1goals, $m->team2goals, $m->team1tip, $m->team2tip);
+            $m->points = $grisuji_pointhelper->getPoints($m->team1goals, $m->team2goals, $m->team1tip, $m->team2tip);
+            $m->toddepoints = $todde_pointhelper->getPoints($m->team1goals, $m->team2goals, $m->team1tip, $m->team2tip);
         }
         $viewModel = new viewModel(array('matches' => $matches, 'form' => $form));
         return $viewModel;

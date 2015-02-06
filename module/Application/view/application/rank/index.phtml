@@ -6,6 +6,7 @@
             <th>Spieler</th>
             <th>Spieltag <?php echo $this->day ?></th>
             <th>Gesamt</th>
+            <th style="color:#A4A4A4">Todde</th>
         </tr>
         <?php $platz=0;
                 $mem_points = -1;
@@ -27,6 +28,9 @@
                 </td>
                 <td>
                     <?php echo $this->escapeHtml($u['points']);?>
+                </td>
+                <td style="color:#A4A4A4">
+                    <?php echo $this->escapeHtml($u['todde_day']); echo "/" ; echo $this->escapeHtml($u['todde']);?>
                 </td>
             </tr>
         <?php } ?>

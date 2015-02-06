@@ -6,7 +6,7 @@
  * Time: 21:10
  */
 
-namespace Application\Model;
+namespace Application\Rules;
 
 
 abstract class AbstractPoints {
