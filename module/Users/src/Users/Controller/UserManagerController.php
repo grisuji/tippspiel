@@ -15,6 +15,10 @@ class UserManagerController extends AbstractActionController{
 
     protected $authservice;
 
+    public function testPermission($id) {
+        return $this->getAuthService()->getStorage()->read()->name=='admin' or  $this->getAuthService()->getStorage()->read()->id == $id;
+    }
+
     public function getAuthService()
     {
         if (! $this->authservice) {
@@ -46,6 +50,12 @@ class UserManagerController extends AbstractActionController{
     {
         $userTable = $this->getServiceLocator()->get('UserTable');
         $user = $userTable->getUser($this->params()->fromRoute('id'));
+        if (!$this->testPermission($user)) {
+            return $this->redirect()->toRoute(NULL, array(
+                'controller' => 'error',
+                'action' => 'index'
+            ));
+        }
         unset($user->password);
         $form = $this->getServiceLocator()->get('UserEditForm');
         $form->bind($user);
@@ -100,6 +110,9 @@ class UserManagerController extends AbstractActionController{
 
     public function deleteAction()
     {
-        $this->getServiceLocator()->get('UserTable')->deleteUser($this->params()->fromRoute('id'));
+        if ($this->getAuthService()->getStorage()->read()->name == 'admin') {
+            $this->getServiceLocator()->get('UserTable')->deleteUser($this->params()->fromRoute('id'));
+        }
+        return $this->redirect()->toRoute('users/user-manager');
     }
 }
