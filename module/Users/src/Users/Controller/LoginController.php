@@ -90,6 +90,19 @@ class LoginController extends AbstractActionController
 
     public function confirmAction()
     {
+        // redirect
+        $referer = $this->getRequest()->getHeader('Referer');
+        if ($referer) {
+            $refererUrl = $referer->uri()->getPath(); // referer url
+            $refererHost = $referer->uri()->getHost(); // referer host
+            $host = $this->getRequest()->getUri()->getHost(); // current host
+
+            // only redirect to previous page if request comes from same host
+            if ($refererUrl && ($refererHost == $host)) {
+                return $this->redirect()->toUrl($refererUrl);
+            }
+        }
+
         $user = $this->getAuthService()->getStorage()->read();
         $viewModel  = new ViewModel(array(
             'user_name' => $user->name

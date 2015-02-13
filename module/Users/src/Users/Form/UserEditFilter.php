@@ -39,6 +39,24 @@ class UserEditFilter extends InputFilter
                 ),
             ),
         ));
+        $this->add(array(
+            'name'       => 'password',
+            'required'   => false,
+            'allowEmpty' => true,
+        ));
 
+        $this->add(array(
+            'name'       => 'confirm_password',
+            'required'   => false,
+            'allowEmpty' => true,
+            'validators' => array(
+                array(
+                    'name'    => 'Identical',
+                    'options' => array(
+                        'token' => 'password',
+                    ),
+                ),
+            )
+        ));
     }
 }

@@ -46,6 +46,7 @@ class UserManagerController extends AbstractActionController{
     {
         $userTable = $this->getServiceLocator()->get('UserTable');
         $user = $userTable->getUser($this->params()->fromRoute('id'));
+        unset($user->password);
         $form = $this->getServiceLocator()->get('UserEditForm');
         $form->bind($user);
         $viewModel = new viewModel(array(
@@ -65,6 +66,7 @@ class UserManagerController extends AbstractActionController{
         $post = $this->request->getPost();
         $userTable = $this->getServiceLocator()->get('UserTable');
         $user = $userTable->getUser($post->id);
+        unset($user->password);
         //  bind User to Form
         $form = $this->getServiceLocator()->get('UserEditForm');
         $form->bind($user);
@@ -80,6 +82,19 @@ class UserManagerController extends AbstractActionController{
 
         // save User
         $this->getServiceLocator()->get('UserTable')->saveUser($user);
+        // redirect
+        $referer = $this->getRequest()->getHeader('Referer');
+        if ($referer) {
+            $refererUrl = $referer->uri()->getPath(); // referer url
+            $refererHost = $referer->uri()->getHost(); // referer host
+            $host = $this->getRequest()->getUri()->getHost(); // current host
+
+            // only redirect to previous page if request comes from same host
+            if ($refererUrl && ($refererHost == $host)) {
+                return $this->redirect()->toUrl($refererUrl);
+            }
+        }
+        // redirect to home if no referer or from another page
         return $this->redirect()->toRoute('users/user-manager');
     }
 

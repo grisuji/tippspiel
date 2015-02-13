@@ -25,9 +25,6 @@ class UserTable {
         $data = array(
             'email'         => $user->email,
             'name'          => $user->name,
-            'password'      => $user->password,
-            'registerdate'  => $user->registerdate,
-            'lastlogin'     => $user->lastlogin,
         );
 
         $id = (int)$user->id;
@@ -35,6 +32,9 @@ class UserTable {
             $this->tableGateway->insert($data);
         } else {
             if ($this->getUser($id)) {
+                if (isset($user->password)) {
+                    $data['password'] = $user->password;
+                }
                 $this->tableGateway->update($data, array('id' => $id));
             } else {
                 throw new Exception('User ID does not exist');

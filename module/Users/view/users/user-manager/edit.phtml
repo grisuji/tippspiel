@@ -30,6 +30,20 @@
             echo $this->formElement($form->get('email'));
             echo $this->formElementErrors($form->get('email'));
             ?></dd>
+        <dt><?php echo $this->formLabel($form->get('password'));?></dt>
+        <dd>
+            <?php
+            echo $this->formElement($form->get('password'));
+            echo $this->formElementErrors($form->get('password'));
+            ?>
+        </dd>
+        <dt><?php echo $this->formLabel($form->get('confirm_password'));?></dt>
+        <dd>
+            <?php
+            echo $this->formElement($form->get('confirm_password'));
+            echo $this->formElementErrors($form->get('confirm_password'));
+            ?>
+        </dd></br>
 
         <dd><?php
             echo $this->formElement($form->get('submit'));

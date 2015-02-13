@@ -25,7 +25,7 @@ class UserEditForm extends Form
                 'required' => 'required'
             ),
             'options' => array(
-                'label' => 'Full Name',
+                'label' => 'Name',
             ),
         ));
 
@@ -41,19 +41,25 @@ class UserEditForm extends Form
         ));
 
         $this->add(array(
-            'name' => 'registerdate',
-            'attributes' => array(
-                'type'  => 'hidden',
-            ),
-        ));
-
+                'name' => 'password',
+                'attributes' => array(
+                    'type' => 'password',
+                ),
+                'options' => array(
+                    'label' => 'Passwort',
+                ),
+            )
+        );
         $this->add(array(
-            'name' => 'lastlogin',
-            'attributes' => array(
-                'type'  => 'hidden',
-            ),
-        ));
-
+                'name' => 'confirm_password',
+                'attributes' => array(
+                    'type' => 'password',
+                ),
+                'options' => array(
+                    'label' => 'wiederhole Passwort',
+                ),
+            )
+        );
         $this->add(array(
             'name' => 'submit',
             'attributes' => array(
