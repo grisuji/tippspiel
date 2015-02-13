@@ -95,18 +95,6 @@ class UserManagerController extends AbstractActionController{
 
         // save User
         $this->getServiceLocator()->get('UserTable')->saveUser($user);
-        // redirect
-        $referer = $this->getRequest()->getHeader('Referer');
-        if ($referer) {
-            $refererUrl = $referer->uri()->getPath(); // referer url
-            $refererHost = $referer->uri()->getHost(); // referer host
-            $host = $this->getRequest()->getUri()->getHost(); // current host
-
-            // only redirect to previous page if request comes from same host
-            if ($refererUrl && ($refererHost == $host)) {
-                return $this->redirect()->toUrl($refererUrl);
-            }
-        }
         // redirect to home if no referer or from another page
         return $this->redirect()->toRoute('users/user-manager');
     }

@@ -32,7 +32,7 @@ class UserTable {
             $this->tableGateway->insert($data);
         } else {
             if ($this->getUser($id)) {
-                if (isset($user->password)) {
+                if (isset($user->password) and !empty($user->password)) {
                     $data['password'] = $user->password;
                 }
                 $this->tableGateway->update($data, array('id' => $id));

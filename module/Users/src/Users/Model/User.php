@@ -27,7 +27,7 @@ class User {
         $this->id = (isset($data['id'])) ? $data['id'] : null;
         $this->name = (isset($data['name'])) ? $data['name'] : null;
         $this->email = (isset($data['email'])) ? $data['email'] : null;
-        if (isset($data['password']))
+        if (isset($data['password']) and !empty($data['password']))
         {
             $this->setPassword($data['password']);
         }
