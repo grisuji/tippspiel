@@ -96,7 +96,10 @@ class UserManagerController extends AbstractActionController{
         // save User
         $this->getServiceLocator()->get('UserTable')->saveUser($user);
         // redirect to home if no referer or from another page
-        return $this->redirect()->toRoute('users/user-manager');
+        return $this->redirect()->toRoute(NULL , array(
+            'controller' => 'user-manager',
+            'action' =>  'confirm'
+        ));
     }
 
     public function deleteAction()
@@ -106,4 +109,11 @@ class UserManagerController extends AbstractActionController{
         }
         return $this->redirect()->toRoute('users/user-manager');
     }
+
+    public function confirmAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
 }
