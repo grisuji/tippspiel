@@ -15,10 +15,6 @@ class UserManagerController extends AbstractActionController{
 
     protected $authservice;
 
-    public function testPermission($id) {
-        return $this->getAuthService()->getStorage()->read()->name=='admin' or  $this->getAuthService()->getStorage()->read()->id == $id;
-    }
-
     public function getAuthService()
     {
         if (! $this->authservice) {
@@ -48,20 +44,27 @@ class UserManagerController extends AbstractActionController{
      */
     public function editAction()
     {
-        $userTable = $this->getServiceLocator()->get('UserTable');
-        $user = $userTable->getUser($this->params()->fromRoute('id'));
-        if (!$this->testPermission($user)) {
+        $uid=$this->params()->fromRoute('id');
+        if($this->getAuthService()->hasIdentity()) {
+            $logged_in_id = $this->getAuthService()->getStorage()->read()->id;
+        } else {
             return $this->redirect()->toRoute(NULL, array(
                 'controller' => 'error',
                 'action' => 'index'
             ));
         }
+        if ($this->getAuthService()->getStorage()->read()->name!='admin') {
+            $uid = $logged_in_id;
+        }
+
+        $userTable = $this->getServiceLocator()->get('UserTable');
+        $user = $userTable->getUser($uid);
         unset($user->password);
         $form = $this->getServiceLocator()->get('UserEditForm');
         $form->bind($user);
         $viewModel = new viewModel(array(
             'form' => $form,
-            'user_id' => $this->params()->fromRoute('id'),
+            'user_id' => $uid
         ));
         return $viewModel;
     }
