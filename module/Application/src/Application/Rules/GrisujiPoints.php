@@ -14,6 +14,7 @@ class GrisujiPoints extends AbstractPoints {
     const SAMESIGN = 8;
     const OTHER = 6;
     const MIN = 0;
+    const MAXSIGNDIFF = 2;
 
     /**
      * @param $result1
@@ -24,9 +25,13 @@ class GrisujiPoints extends AbstractPoints {
      */
     public function getPoints($result1, $result2, $tip1, $tip2)
     {
-        if ($result1===""  or $result2==="" or $tip1==="" or $tip2===""){
+        if ($this->signDiff($result1, $result2, $tip1, $tip2) == GrisujiPoints::MAXSIGNDIFF or
+            $result1===""  or $result2==="" or $tip1==="" or $tip2===""){
             return 0;
         }
+
+
+
         if ($this->isEqual($result1, $result2, $tip1, $tip2)){
             $points = GrisujiPoints::EXACT;
         } elseif ($this->haveSameDiff($result1, $result2, $tip1, $tip2)){
@@ -36,6 +41,7 @@ class GrisujiPoints extends AbstractPoints {
         } else {
             $points = GrisujiPoints::OTHER;
         }
+
         return (max(GrisujiPoints::MIN, $points-(
                 $this->diff($result1-$tip1)+
                 $this->diff($result2-$tip2)+
@@ -51,4 +57,5 @@ class GrisujiPoints extends AbstractPoints {
     {
         return abs($number);
     }
+
 }

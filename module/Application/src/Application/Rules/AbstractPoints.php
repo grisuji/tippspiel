@@ -43,9 +43,21 @@ abstract class AbstractPoints {
      * @param $tip2
      * @return bool
      */
-    /** @noinspection PhpUnusedPrivateMethodInspection */
     protected function haveSameSign($result1, $result2, $tip1, $tip2){
-        return $this->sign($result2-$result1) == $this->sign($tip2-$tip1);
+        return $this->signDiff($result1, $result2, $tip1, $tip2) == 0;
+        //return $this->sign($result2-$result1) == $this->sign($tip2-$tip1);
+    }
+
+    /**
+     * @param $result1
+     * @param $result2
+     * @param $tip1
+     * @param $tip2
+     * @return integer
+     */
+    /** @noinspection PhpUnusedPrivateMethodInspection */
+    protected function signDiff($result1, $result2, $tip1, $tip2){
+        return abs($this->sign($result2-$result1) - $this->sign($tip2-$tip1));
     }
 
     /**
