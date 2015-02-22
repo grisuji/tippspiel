@@ -30,6 +30,16 @@ class UserEditForm extends Form
         ));
 
         $this->add(array(
+            'name' => 'motto',
+            'attributes' => array(
+                'type'  => 'text',
+            ),
+            'options' => array(
+                'label' => 'Info',
+            ),
+        ));
+
+        $this->add(array(
             'name' => 'email',
             'attributes' => array(
                 'type'  => 'email',

@@ -14,6 +14,7 @@ class User {
     public $name;
     public $email;
     public $password;
+    public $motto;
     public $registerdate;
     public $lastlogin;
 
@@ -31,6 +32,7 @@ class User {
         {
             $this->setPassword($data['password']);
         }
+        $this->motto = (isset($data['motto'])) ? $data['motto'] : null;
         $this->registerdate = (isset($data['registerdate'])) ? $data['registerdate'] : null;
         $this->lastlogin = (isset($data['lastlogin'])) ? $data['lastlogin'] : null;
     }

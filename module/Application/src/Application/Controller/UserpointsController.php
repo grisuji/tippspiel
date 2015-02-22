@@ -84,9 +84,9 @@ class UserpointsController extends AbstractActionController{
         if (empty($day)) {
             $day = $matchTable->getDayOfNextMatch();
         }
-
         $matches = $matchTable->getUserMatchesByDay($userid, $day);
         $userTable = $this->getServiceLocator()->get('UserTable');
+        $userinfo = $userTable->getUser($userid);
         $users = $userTable->fetchAll();
         $userlist = array();
         foreach($users as $u) {
@@ -106,7 +106,7 @@ class UserpointsController extends AbstractActionController{
             $m->points = $grisuji_pointhelper->getPoints($m->team1goals, $m->team2goals, $m->team1tip, $m->team2tip);
             $m->toddepoints = $todde_pointhelper->getPoints($m->team1goals, $m->team2goals, $m->team1tip, $m->team2tip);
         }
-        $viewModel = new viewModel(array('matches' => $matches, 'form' => $form));
+        $viewModel = new viewModel(array('matches' => $matches, 'form' => $form, 'userinfo' => $userinfo));
         return $viewModel;
 
     }

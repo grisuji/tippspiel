@@ -30,6 +30,11 @@
             echo $this->formElement($form->get('email'));
             echo $this->formElementErrors($form->get('email'));
             ?></dd>
+        <dt><?php echo $this->formLabel($form->get('motto')); ?></dt>
+        <dd><?php
+            echo $this->formElement($form->get('motto'));
+            echo $this->formElementErrors($form->get('motto'));
+            ?></dd>
         <dt><?php echo $this->formLabel($form->get('password'));?></dt>
         <dd>
             <?php

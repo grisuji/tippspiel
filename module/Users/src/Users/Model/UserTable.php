@@ -11,6 +11,8 @@ namespace Users\Model;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Exception;
+use Zend\Debug\Debug;
+
 
 class UserTable {
     protected $tableGateway;
@@ -25,6 +27,7 @@ class UserTable {
         $data = array(
             'email'         => $user->email,
             'name'          => $user->name,
+            'motto'         => $user->motto,
         );
         if (isset($user->password) and !empty($user->password)) {
             $data['password'] = $user->password;
@@ -63,6 +66,8 @@ class UserTable {
         $id  = (int) $id;
         $rowset = $this->tableGateway->select(array('id' => $id));
         $row = $rowset->current();
+        debug::dump($row);
+
         if (!$row) {
             throw new Exception("Could not find row $id");
         }

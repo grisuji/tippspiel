@@ -21,6 +21,21 @@ class UserEditFilter extends InputFilter
         ));
 
         $this->add(array(
+            'name'       => 'motto',
+            'required'   => false,
+            'validators' => array(
+                array(
+                    'name'    => 'StringLength',
+                    'options' => array(
+                        'encoding' => 'UTF-8',
+                        'min'      => 4,
+                        'max'      => 255,
+                    ),
+                ),
+            ),
+        ));
+
+        $this->add(array(
             'name'       => 'name',
             'required'   => true,
             'filters'    => array(
