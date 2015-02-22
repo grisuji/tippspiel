@@ -5,6 +5,19 @@
             Ein Fehler ist bei Deinem Abgabe-Versuch aufgetreten. Bitte versuche es noch einmal.
         </div>
     <?php endif ?>
+    <?php if ($this->savedtips):
+        if ($this->savedtips>0): ?>
+        <div class="alert-success">
+            Es
+            <?php if ($this->savedtips==1):
+                echo " wurde ein Tipp ";
+            else:
+                echo " wurden ".$this->savedtips. " Tipps ";
+            endif  ?>
+            gespeichert.
+        </div>
+        <?php endif ?>
+    <?php endif ?>
 
     <?php
     $form1 = $this->form;

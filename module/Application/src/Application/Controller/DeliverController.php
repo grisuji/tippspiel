@@ -61,21 +61,10 @@ class DeliverController extends AbstractActionController {
         $index = 0;
         $data = array();
         $form = new DeliverForm($this->day);
-        #$form = $this->getServiceLocator()->get('DeliverForm');
-        #if ($post) {
-        #    $form->setData($request->getPost());
-        #    if (!$form->isValid()) {
-        #        $model = new ViewModel(array(
-        #            'error' => true,
-        #            'type' => 'default',
-        #            'form' => $form,
-        #        ));
-        #        $model->setTemplate('application/deliver/index');
-        #        return $model;
-        #    }
-        #}
+
 
         $now = new DateTime();
+        $saved = 0; // How much tipps were saved
         foreach($matches as $m) {
             $index++;
             $start = new DateTime($m->start);
@@ -87,11 +76,12 @@ class DeliverController extends AbstractActionController {
                     $tip1 = $this->request->getPost('match' . $index . '_team1');
                     $tip2 = $this->request->getPost('match' . $index . '_team2');
 
-                    if ($m->team1tip != $tip1 or $m->team1tip != $tip2) {
+                    if (($m->team1tip != $tip1 or $m->team2tip != $tip2) and (isset($tip1) or isset($tip2))) {
                         if ($tip1!="") $m->team1tip = $tip1;
                         if ($tip2!="") $m->team2tip = $tip2;
                         $m->userid = $userid;
                         $tipTable->saveTip($m);
+                        $saved++;
                     }
                 }
             }
@@ -99,7 +89,7 @@ class DeliverController extends AbstractActionController {
             $data['match'.$index.'_team2'] = $m->team2tip;
         }
         $form->populateValues($data);
-        $viewModel = new viewModel(array('matches' => $matches, 'form' => $form));
+        $viewModel = new viewModel(array('matches' => $matches, 'form' => $form, 'savedtips' => $saved));
         #Debug::dump($this->day);exit;
         return $viewModel;
     }
