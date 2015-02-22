@@ -66,7 +66,7 @@ class UserTable {
         $id  = (int) $id;
         $rowset = $this->tableGateway->select(array('id' => $id));
         $row = $rowset->current();
-        debug::dump($row);
+        #debug::dump($row);
 
         if (!$row) {
             throw new Exception("Could not find row $id");
