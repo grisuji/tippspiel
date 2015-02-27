@@ -82,6 +82,8 @@ class MatchTable {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(array('id', 'league', 'saison', 'groupid', 'date_time', 'team1goals', 'team2goals', 'isfinished',  ));
         $select->join('tips', 'matchid=matches.id', array('tipid'=>'id', 'userid', 'team1tip', 'team2tip'), 'left');
+        $select->join(array('team1' => 'teams'), 'team1.id=matches.team1id', array('team1name' => 'longname', 'team1emblem' => 'emblem'), 'left');
+        $select->join(array('team2' => 'teams'), 'team2.id=matches.team2id', array('team2name' => 'longname', 'team2emblem' => 'emblem'),'left');
         $select->join('user', 'user.id=tips.userid', array('username' => 'name'),'left');
         $where = new Where();
         $where->equalTo('saison',(int) $saison)

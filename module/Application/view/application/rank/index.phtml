@@ -1,38 +1,57 @@
 <section class="ranking">
-    <h2>Tabelle</h2>
-    <table class="table">
+    <h2>Spieltag  <?php echo $this->day ?></h2>
+    <table class="table" >
         <tr>
-            <th>Platz</th>
+            <th></th>
             <th>Spieler</th>
-            <th>Spieltag <?php echo $this->day ?></th>
-            <th>Gesamt</th>
-            <th style="color:#A4A4A4">Todde</th>
+            <th>Punkte</th>
+            <?php foreach ($this->live['matches'] as $matchid) { ?>
+            <th align="center" valign="middle">
+                <img src="<?php echo $this->basePath().'/img/emblem/'.$live['emblem1'][$matchid];?>"/></br>
+                <?php if (isset($live['goals1'][$matchid])) {
+                    echo $live['goals1'][$matchid];
+                    echo ":";
+                    echo $live['goals2'][$matchid];
+                }?>
+                </br>
+                <img src="<?php echo $this->basePath().'/img/emblem/'.$live['emblem2'][$matchid];?>"/>
+
+            </th>
+            <?php } ?>
+            <th style="color:#A4A4A4">Toddde</th>
         </tr>
         <?php $platz=0;
                 $mem_points = -1;
                 foreach($this->user as $id => $u){
-                    if ($mem_points != $u['points']) {
-                        $platz++;
-                    }
-                    $mem_points = $u['points'];
                     ?>
             <tr>
                 <td>
-                    <?php echo $platz; ?>
+                    <?php if ($mem_points!= $u['points']) { echo ++$platz; } ?>
                 </td>
                 <td>
                     <a href="<?php echo $this->url('application/userpoints', array('userid' => $u['id'], 'day' => $this->day)) ?>"><?php echo $this->escapeHtml($u['name']);?></a>
                 </td>
                 <td>
-                    <?php echo $this->escapeHtml($u[$this->day]);?>
+                    <?php echo $this->escapeHtml($u[$this->day]); echo "/" ;echo $this->escapeHtml($u['points']);?>
                 </td>
-                <td>
-                    <?php echo $this->escapeHtml($u['points']);?>
-                </td>
+                <?php foreach ($this->live['matches'] as $matchid) { ?>
+                    <td align="left" valign="middle">
+                        <?php if (isset($u['tip1'][$matchid])) {
+                            echo $u['tip1'][$matchid];
+                            echo ":";
+                            echo $u['tip2'][$matchid];
+                        } ?>
+                        <strong style="color:darkgreen;font-size:80%">
+                            <?php echo $u['matchpoints'][$matchid]; ?>
+                        </strong>
+                    </td>
+                <?php } ?>
                 <td style="color:#A4A4A4">
                     <?php echo $this->escapeHtml($u['todde_day']); echo "/" ; echo $this->escapeHtml($u['todde']);?>
                 </td>
             </tr>
-        <?php } ?>
+        <?php
+            $mem_points = $u['points'];
+                  } ?>
     </table>
 </section>

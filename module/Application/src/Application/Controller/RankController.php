@@ -50,7 +50,13 @@ class RankController  extends AbstractActionController{
         $day = $matchTable->getDayOfNextMatch();
         $matches = $matchTable->getSaisonTipsAndMatches(2014);
         $user = array();
-
+        $now = new DateTime();
+        $live = array();
+        $live['matches'] = array();
+        $live['emblem1'] = array();
+        $live['emblem2'] = array();
+        $live['goals1'] = array();
+        $live['goals2'] = array();
         foreach($matches as $m) {
             if ($m->userid < 2) continue;
 
@@ -60,6 +66,9 @@ class RankController  extends AbstractActionController{
                                         'points' => 0,
                                         'todde' => 0,
                                         'todde_day' => 0,
+                                        'tip1' => array(),
+                                        'tip2' => array(),
+                                        'matchpoints' => array(),
                                         $day => 0,
                                         'id' => $m->userid);
             }
@@ -70,11 +79,26 @@ class RankController  extends AbstractActionController{
             $user[$m->userid]['points'] += $points;
             $user[$m->userid]['todde'] += $todde;
             if ($day == $m->day) {
+                array_push($live['matches'], $m->id);
+                $live['emblem1'][$m->id] = $m->team1emblem;
+                $live['emblem2'][$m->id] = $m->team2emblem;
+                $start = new DateTime($m->start);
+                if ($now->getTimestamp() <= $start->getTimestamp()) {
+                    $m->team1tip = "-";
+                    $m->team2tip = "-";
+                } else {
+                    $live['goals1'][$m->id] = $m->team1goals;
+                    $live['goals2'][$m->id] = $m->team2goals;
+                    $user[$m->userid]['matchpoints'][$m->id] = $points;
+                }
+                $user[$m->userid]['tip1'][$m->id] =  $m->team1tip;
+                $user[$m->userid]['tip2'][$m->id] =  $m->team2tip;
                 $user[$m->userid]['todde_day'] += $todde;
             }
         }
+        $live['matches'] = array_unique($live['matches']);
         usort($user, array($this, "cmp_points"));
-        $view = new ViewModel(array('user'=>$user, 'day'=>$day));
+        $view = new ViewModel(array('user'=>$user, 'day'=>$day, 'live'=>$live));
         return $view;
     }
 }
