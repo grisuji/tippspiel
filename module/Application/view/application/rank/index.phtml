@@ -3,10 +3,13 @@
     <table class="table" >
         <tr>
             <th></th>
-            <th>Spieler</th>
-            <th>Punkte</th>
+            <th></th>
+            <th></th>
             <?php foreach ($this->live['matches'] as $matchid) { ?>
-            <th align="center" valign="middle">
+            <th <?php if($this->live['finished'] == 0): ?>
+                style="color:orangered"
+                <?php endif ?>
+                >
                 <img src="<?php echo $this->basePath().'/img/emblem/'.$live['emblem1'][$matchid];?>"/></br>
                 <?php if (isset($live['goals1'][$matchid])) {
                     echo $live['goals1'][$matchid];
@@ -35,15 +38,22 @@
                     <?php echo $this->escapeHtml($u[$this->day]); echo "/" ;echo $this->escapeHtml($u['points']);?>
                 </td>
                 <?php foreach ($this->live['matches'] as $matchid) { ?>
-                    <td align="left" valign="middle">
+                    <td <?php if ($u['matchpoints'][$matchid] == 0): ?>
+                      style="color:#A4A4A4"
+                        <?php endif ?>
+                        >
                         <?php if (isset($u['tip1'][$matchid])) {
                             echo $u['tip1'][$matchid];
                             echo ":";
                             echo $u['tip2'][$matchid];
                         } ?>
-                        <strong style="color:darkgreen;font-size:80%">
-                            <?php echo $u['matchpoints'][$matchid]; ?>
-                        </strong>
+                        <?php if ($u['matchpoints'][$matchid] > 0): ?>
+                            <strong style="color:orange;font-size:100%">
+                                <sub>
+                                    <?php echo $u['matchpoints'][$matchid]; ?>
+                                </sub>
+                            </strong>
+                        <?php endif ?>
                     </td>
                 <?php } ?>
                 <td style="color:#A4A4A4">

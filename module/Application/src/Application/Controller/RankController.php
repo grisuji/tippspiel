@@ -57,6 +57,7 @@ class RankController  extends AbstractActionController{
         $live['emblem2'] = array();
         $live['goals1'] = array();
         $live['goals2'] = array();
+        $live['finished'] = 0;
         foreach($matches as $m) {
             if ($m->userid < 2) continue;
 
@@ -90,6 +91,7 @@ class RankController  extends AbstractActionController{
                     $live['goals1'][$m->id] = $m->team1goals;
                     $live['goals2'][$m->id] = $m->team2goals;
                     $user[$m->userid]['matchpoints'][$m->id] = $points;
+                    $live['finished'] = $m->isfinished;
                 }
                 $user[$m->userid]['tip1'][$m->id] =  $m->team1tip;
                 $user[$m->userid]['tip2'][$m->id] =  $m->team2tip;
