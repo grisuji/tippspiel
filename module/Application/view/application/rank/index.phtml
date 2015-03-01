@@ -6,7 +6,7 @@
             <th></th>
             <th></th>
             <?php foreach ($this->live['matches'] as $matchid) { ?>
-            <th <?php if($this->live['finished'] == 0): ?>
+            <th <?php if($this->live['finished'][$matchid] == 0): ?>
                 style="color:darkred"
                 <?php endif ?>
                 >
