@@ -7,7 +7,7 @@
             <th></th>
             <?php foreach ($this->live['matches'] as $matchid) { ?>
             <th <?php if($this->live['finished'][$matchid] == 0): ?>
-                style="color:darkred"
+                style="color:red"
                 <?php endif ?>
                 >
                 <img src="<?php echo $this->basePath().'/img/emblem/'.$live['emblem1'][$matchid];?>"/></br>
