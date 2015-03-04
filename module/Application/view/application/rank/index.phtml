@@ -29,7 +29,7 @@
                     ?>
             <tr>
                 <td>
-                    <?php if ($mem_points!= $u['points']) { echo ++$platz; } ?>
+                    <?php $platz++; if ($mem_points!= $u['points']) { echo $platz; } ?>
                 </td>
                 <td>
                     <a href="<?php echo $this->url('application/userpoints', array('userid' => $u['id'], 'day' => $this->day)) ?>"><?php echo $this->escapeHtml($u['name']);?></a>
