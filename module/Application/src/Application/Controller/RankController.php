@@ -132,7 +132,7 @@ class RankController  extends AbstractActionController{
             'zoomType' => "x"
         );
         $linechart["title"] = array(
-            'text' => "Entwicklung der Spielerpunkte",
+            'text' => "Spielerpunkte pro Spieltag",
             'x' => -20
         );
 
@@ -147,7 +147,7 @@ class RankController  extends AbstractActionController{
 
         $linechart["yAxis"] = array(
             'title' => array(
-                'text' => "Gesamtpunkte"
+                'text' => "cumulierte Punkte"
             ),
             'type' => 'linear',
             'plotlines' => array(array(
@@ -159,7 +159,8 @@ class RankController  extends AbstractActionController{
 
         $linechart["plotOptions"] = array(
             'column' => array(
-                'stacking' => "percent",
+                #'stacking' => "percent",
+                'stacking' => "normal",
                 'pointPadding' => 0.2,
                 'borderWidth' => 0
             )
