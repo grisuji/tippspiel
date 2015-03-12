@@ -157,9 +157,9 @@ class RankController  extends AbstractActionController{
         );
 
         $linechart["legend"] = array(
-            'layout' => "vertical",
-            'align' => "right",
-            'verticalAlign' => "middle",
+            'layout' => "horizontal",
+            'align' => "center",
+            'verticalAlign' => "bottom",
             'borderWidth' => 0
         );
         $linechart["series"] = array(
