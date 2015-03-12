@@ -1,3 +1,8 @@
+<?php $this->headScript()
+            ->appendFile($this->basePath().'/js/highcharts.js', 'text/javascript')
+            ->appendScript('$(function () {$("#hc_container").highcharts('.$this->json["linechart"].') });');
+    echo $this->headScript();
+?>
 <section class="ranking">
     <h2>Spieltag  <?php echo $this->day ?></h2>
     <table class="table" >
@@ -64,4 +69,5 @@
             $mem_points = $u['points'];
                   } ?>
     </table>
+    <div id="hc_container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 </section>

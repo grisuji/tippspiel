@@ -79,6 +79,7 @@ class RankController  extends AbstractActionController{
             $user[$m->userid][$m->day] += $points;
             $user[$m->userid]['points'] += $points;
             $user[$m->userid]['todde'] += $todde;
+
             if ($day == $m->day) {
                 array_push($live['matches'], $m->id);
                 $live['emblem1'][$m->id] = $m->team1emblem;
@@ -100,7 +101,85 @@ class RankController  extends AbstractActionController{
         }
         $live['matches'] = array_unique($live['matches']);
         usort($user, array($this, "cmp_points"));
-        $view = new ViewModel(array('user'=>$user, 'day'=>$day, 'live'=>$live));
+        $jsons = array(
+            "linechart" => json_encode($this->genHighChartLine(2014, $user, $day))
+        );
+        $view = new ViewModel(array('user'=>$user, 'day'=>$day, 'live'=>$live, 'json'=>$jsons));
+
         return $view;
+    }
+
+    private function genHighChartLine($saison, $userdata, $day){
+
+        $minday=36;
+        # find the first day with non-zero-points
+        foreach ($userdata as $id=>$u) {
+            for ($actday = 1; $actday <= $day; $actday++) {
+                if ($u[$actday] > 0) {
+                    $minday = min($minday, $actday);
+                    break 2;
+                }
+            }
+        }
+                # create some arrays with data
+        $spieltage=array();
+        for ($d=$minday; $d <= $day; $d++) {
+            array_push($spieltage, $d);
+        }
+        $linechart = array();
+        $linechart["title"] = array(
+            'text' => "Entwicklung der Spielerpunkte",
+            'x' => -20
+        );
+
+        $linechart["subtitle"] = array(
+            'text' => "Saison " . $saison,
+            'x' => -20
+        );
+
+        $linechart["xAxis"] = array(
+            'categories' => $spieltage
+        );
+
+        $linechart["yAxis"] = array(
+            'title' => array(
+                'text' => "Gesamtpunkte"
+            ),
+            'plotlines' => array(array(
+                'value' => 0,
+                'width' => 1,
+                'color' => "#808080"
+            ))
+        );
+
+        $linechart["tooltip"] = array(
+            'valueSuffix' => ' Punkte'
+        );
+
+        $linechart["legend"] = array(
+            'layout' => "vertical",
+            'align' => "right",
+            'verticalAlign' => "middle",
+            'borderWidth' => 0
+        );
+        $linechart["series"] = array(
+
+        );
+
+        foreach ($userdata as $id=>$u) {
+            $data = array_fill(0, 1+$day-$minday, 0);
+            for ($actday=$minday; $actday<=$day; $actday++) {
+                for ($d=$actday; $d<=$day; $d++) {
+                    $data[$d-$minday] += $u[$actday];
+                }
+            }
+            $new_user=array(
+                'name' => $u['name'],
+                'data' => $data
+            );
+            array_push($linechart["series"], $new_user);
+        }
+#        Debug::dump(json_encode($linechart));
+        return $linechart;
     }
 }
