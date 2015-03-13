@@ -7,6 +7,9 @@
  */
 
 namespace Application\Model;
+use Application\Rules\GrisujiPoints;
+use Application\Rules\ToddePoints;
+
 
 class Match {
     public $id;
@@ -25,6 +28,9 @@ class Match {
     public $username;
     public $team1tip;
     public $team2tip;
+
+    private $points = 0;
+    private $todde = 0;
 
     public function exchangeArray($data)
     {
@@ -48,5 +54,21 @@ class Match {
     public function getArrayCopy()
     {
         return get_object_vars($this);
+    }
+
+    public function setPoints(){
+        $pointhelper = new GrisujiPoints();
+        $toddehelper = new ToddePoints();
+
+        $this->points = $pointhelper->getPoints($this->team1goals, $this->team2goals, $this->team1tip, $this->team2tip);
+        $this->todde = $toddehelper->getPoints($this->team1goals, $this->team2goals, $this->team1tip, $this->team2tip);
+    }
+
+    public function getToddde(){
+        return $this->todde;
+    }
+
+    public function getPoints(){
+        return $this->points;
     }
 }

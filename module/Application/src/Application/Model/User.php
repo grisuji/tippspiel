@@ -8,22 +8,31 @@
 
 namespace Application\Model;
 
-
+# manage a single user
 class User {
     public $id;
     public $name;
     public $points;
+    public $toddde;
+    public $days=array();
 
-    public function exchangeArray($data)
-    {
-        $this->id = (isset($data['id'])) ? $data['id'] : null;
-        $this->name = (isset($data['name'])) ? $data['name'] : null;
-        $this->points = (isset($data['points'])) ? $data['points'] : 0;
+    function __construct(){
+
     }
 
-    public function getArrayCopy()
-    {
-        return get_object_vars($this);
+    public function addMatch($match){
+        if (!isset($match->day)) {
+            throw new \Exception("No day set in match");
+        }
+        $d = $this->days[$match->day];
+        if (!isset($d)) {
+            $d = new Day();
+        }
+        $d->addMatch($match);
+        $this->days[$match->day] = $d;
     }
 
+    public function setPoints(){
+
+    }
 }
