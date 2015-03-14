@@ -12,7 +12,11 @@ class Day {
     public $day;
     private $points = 0;
     private $toddde = 0;
+    private $saison_points = 0;
+    private $saison_toddde = 0;
     private $matches = array();
+    private $rank_in_saison = -1;
+    private $rank_in_day = -1;
 
     public function addMatch($match) {
         $matches[$match->id] = $match;
@@ -36,4 +40,36 @@ class Day {
     public function getPoints(){
         return $this->points;
     }
+
+    public function getSaisonToddde(){
+        return $this->saison_toddde;
+    }
+
+    public function getSaisonPoints(){
+        return $this->saison_points;
+    }
+
+    public function setSaisonToddde($p){
+        $this->saison_toddde = $p;
+    }
+
+    public function setSaisonPoints($p){
+        $this->saison_points = $p;
+    }
+
+    public function setRank($rank, $day=false){
+        if (!$day){
+            $this->rank_in_saison = $rank;
+        } else {
+            $this->rank_in_day = $rank;
+        }
+    }
+
+    public function getRank($day=false){
+        if (!$day){
+            return $this->rank_in_saison;
+        }
+        return $this->rank_in_day;
+    }
+
 }

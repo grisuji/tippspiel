@@ -7,6 +7,7 @@
  */
 
 namespace Application\Controller;
+use Application\Model\Saison;
 use Application\Rules\GrisujiPoints;
 use Application\Rules\ToddePoints;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -36,10 +37,6 @@ class RankController  extends AbstractActionController{
     }
 
     public function indexAction(){
-
-        $pointhelper = new GrisujiPoints();
-        $toddehelper = new ToddePoints();
-
         /* @var $m \Application\Model\Match  */
         /* @var $matchTable \Application\Model\MatchTable  */
         /* @var $u \Users\Model\User */
@@ -49,57 +46,21 @@ class RankController  extends AbstractActionController{
         $matchTable = $this->getServiceLocator()->get('MatchTable');
         $day = $matchTable->getDayOfNextMatch();
         $matches = $matchTable->getSaisonTipsAndMatches(2014);
-        $user = array();
+
+        $saison = new Saison();
         $now = new DateTime();
-        $live = array();
-        $live['matches'] = array();
-        $live['emblem1'] = array();
-        $live['emblem2'] = array();
-        $live['goals1'] = array();
-        $live['goals2'] = array();
-        $live['finished'] = array();
+
         foreach($matches as $m) {
             if ($m->userid < 2) continue;
-
-            if (!isset($user[$m->userid]))
-            {
-                $user[$m->userid] = array('name' => $m->username,
-                                        'points' => 0,
-                                        'todde' => 0,
-                                        'todde_day' => 0,
-                                        'tip1' => array(),
-                                        'tip2' => array(),
-                                        'matchpoints' => array(),
-                                        $day => 0,
-                                        'id' => $m->userid);
+            # hide all future tips
+            $start = new DateTime($m->start);
+            if ($now->getTimestamp() <= $start->getTimestamp()) {
+                $m->team1tip = "-";
+                $m->team2tip = "-";
             }
-            $points = $pointhelper->getPoints($m->team1goals, $m->team2goals, $m->team1tip, $m->team2tip);
-            $todde = $toddehelper->getPoints($m->team1goals, $m->team2goals, $m->team1tip, $m->team2tip);
-
-            $user[$m->userid][$m->day] += $points;
-            $user[$m->userid]['points'] += $points;
-            $user[$m->userid]['todde'] += $todde;
-
-            if ($day == $m->day) {
-                array_push($live['matches'], $m->id);
-                $live['emblem1'][$m->id] = $m->team1emblem;
-                $live['emblem2'][$m->id] = $m->team2emblem;
-                $start = new DateTime($m->start);
-                if ($now->getTimestamp() <= $start->getTimestamp()) {
-                    $m->team1tip = "-";
-                    $m->team2tip = "-";
-                } else {
-                    $live['goals1'][$m->id] = $m->team1goals;
-                    $live['goals2'][$m->id] = $m->team2goals;
-                    $user[$m->userid]['matchpoints'][$m->id] = $points;
-                    $live['finished'][$m->id] = $m->isfinished;
-                }
-                $user[$m->userid]['tip1'][$m->id] =  $m->team1tip;
-                $user[$m->userid]['tip2'][$m->id] =  $m->team2tip;
-                $user[$m->userid]['todde_day'] += $todde;
-            }
+            $saison->addMatch($m);
         }
-        $live['matches'] = array_unique($live['matches']);
+
         usort($user, array($this, "cmp_points"));
         $jsons = array(
             "linechart" => json_encode($this->genHighChartLine(2014, $user, $day))
