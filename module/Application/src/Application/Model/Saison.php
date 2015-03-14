@@ -35,7 +35,7 @@ class Saison {
 
     public function sort($day){
         $this->day_to_sort = $day;
-        $a = $this->getDayPoints($day);
+        $a = $this->getUserDataByDay($day);
         usort($a, array($this, "cmp_points"));
         $rank = 0;
         $oldpoints = -1;
@@ -55,14 +55,44 @@ class Saison {
 
     }
 
+
+    public function getMatchDataByDay($day) {
+        $result = array();
+        foreach ($this->users as $u) {
+            /* @var $u  \Application\Model\User */
+            $d = $u->days[$day];
+            /* @var $d  \Application\Model\UserDay */
+            if (isset($d)) {
+                foreach ($d->getMatches() as $m) {
+                    /* @var $m  \Application\Model\Match */
+                    array_push($result['matches'], $m->id);
+                    $result[$m->id]['emblem1'] = $m->team1emblem;
+                    $result[$m->id]['emblem2'] = $m->team2emblem;
+                    if ($m->team1goals >= 0) { # only set, when match started
+                        $result[$m->id]['goals1'] = $m->team1goals;
+                        $result[$m->id]['goals2'] = $m->team2goals;
+                        $result[$m->id]['finished'] = $m->isfinished;
+                    }
+                }
+                return $result;
+            }
+        }
+        return $result;
+    }
+
     # returns an array with the points of all users at a special day
-    private function getDayPoints($day){
+    public function getUserDataByDay($day){
         $result = array();
         foreach ($this->users as $u){
             /* @var $u  \Application\Model\User */
-            $result["id"] = $u->id;
-            $result["name"] = $u->name;
-            $result["points"] = $u->getPoints($day);
+            $result[$u->id]['id'] = $u->id;
+            $result[$u->id]['name'] = $u->name;
+            $result[$u->id]['rank'] = $u->getRank($day, false);
+            $result[$u->id]['toddde'] = $u->getToddde($day);
+            $result[$u->id]['points'] = $u->getPoints($day);
+            $result[$u->id]['toddde_all'] = $u->getToddde();
+            $result[$u->id]['points_all'] = $u->getPoints();
+            $result[$u->id]['matches'] = $u->getMatchData($day);
         }
         return $result;
     }

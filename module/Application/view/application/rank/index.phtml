@@ -11,18 +11,18 @@
             <th></th>
             <th></th>
             <?php foreach ($this->live['matches'] as $matchid) { ?>
-            <th <?php if($this->live['finished'][$matchid] == 0): ?>
+            <th <?php if($this->live[$matchid]['finished'] == 0): ?>
                 style="color:red"
                 <?php endif ?>
                 >
-                <img src="<?php echo $this->basePath().'/img/emblem/'.$live['emblem1'][$matchid];?>"/></br>
-                <?php if (isset($live['goals1'][$matchid])) {
-                    echo $live['goals1'][$matchid];
+                <img src="<?php echo $this->basePath().'/img/emblem/'.$this->live[$matchid]['emblem1'];?>"/>< /br>
+                <?php if (isset($live[$matchid]['goals1'])) {
+                    echo $live[$matchid]['goals1'];
                     echo ":";
-                    echo $live['goals2'][$matchid];
+                    echo $live[$matchid]['goals2'];
                 }?>
-                </br>
-                <img src="<?php echo $this->basePath().'/img/emblem/'.$live['emblem2'][$matchid];?>"/>
+                < /br>
+                <img src="<?php echo $this->basePath().'/img/emblem/'.$this->live[$matchid]['emblem2'];?>"/>
 
             </th>
             <?php } ?>
@@ -40,29 +40,29 @@
                     <a href="<?php echo $this->url('application/userpoints', array('userid' => $u['id'], 'day' => $this->day)) ?>"><?php echo $this->escapeHtml($u['name']);?></a>
                 </td>
                 <td>
-                    <?php echo $this->escapeHtml($u[$this->day]); echo "/" ;echo $this->escapeHtml($u['points']);?>
+                    <?php echo $this->escapeHtml($u['points']); echo "/" ;echo $this->escapeHtml($u['points_all']);?>
                 </td>
                 <?php foreach ($this->live['matches'] as $matchid) { ?>
-                    <td <?php if ($u['matchpoints'][$matchid] == 0): ?>
+                    <td <?php if ($u['matches'][$matchid] == 0): ?>
                       style="color:#A4A4A4"
                         <?php endif ?>
                         >
-                        <?php if (isset($u['tip1'][$matchid])) {
-                            echo $u['tip1'][$matchid];
+                        <?php if (isset($u['matches'][$matchid]['tip1'])) {
+                            echo $u['matches'][$matchid]['tip1'];
                             echo ":";
-                            echo $u['tip2'][$matchid];
+                            echo $u['matches'][$matchid]['tip2'];
                         } ?>
-                        <?php if ($u['matchpoints'][$matchid] > 0): ?>
+                        <?php if ($u['matches'][$matchid]['points'] > 0): ?>
                             <strong style="color:darkgreen;font-size:100%">
                                 <sub>
-                                    <?php echo $u['matchpoints'][$matchid]; ?>
+                                    <?php echo $u['matches'][$matchid]['points']; ?>
                                 </sub>
                             </strong>
                         <?php endif ?>
                     </td>
                 <?php } ?>
                 <td style="color:#A4A4A4">
-                    <?php echo $this->escapeHtml($u['todde_day']); echo "/" ; echo $this->escapeHtml($u['todde']);?>
+                    <?php echo $this->escapeHtml($u['todde']); echo "/" ; echo $this->escapeHtml($u['todde_all']);?>
                 </td>
             </tr>
         <?php

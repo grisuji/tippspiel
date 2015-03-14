@@ -28,7 +28,7 @@ class User {
         }
         $d = $this->days[$match->day];
         if (!isset($d)) {
-            $d = new Day();
+            $d = new UserDay();
         }
         $d->addMatch($match);
         $this->days[$match->day] = $d;
@@ -38,7 +38,7 @@ class User {
         $this->points = 0;
         $this->toddde = 0;
         foreach ($this->days as $d) {
-            /* @var $d \Application\Model\Day  */
+            /* @var $d \Application\Model\UserDay  */
             $d->setPoints();
             $this->points += $d->getPoints();
             $d->setSaisonPoints($this->points);
@@ -47,28 +47,34 @@ class User {
         }
     }
 
-    public function getToddde($day){
+    public function getToddde($day=0){
+        if ($day==0) {
+            return $this->toddde;
+        }
         $d = $this->days[$day];
-        /* @var $d \Application\Model\Day  */
+        /* @var $d \Application\Model\UserDay  */
         if (!isset($d)){
             return 0;
         }
-        return $d->getSaisonToddde();
+        return $d->getToddde();
     }
 
-    public function getPoints($day){
+    public function getPoints($day=0){
+        if ($day==0) {
+            return $this->points;
+        }
         $d = $this->days[$day];
-        /* @var $d \Application\Model\Day  */
+        /* @var $d \Application\Model\UserDay  */
         if (!isset($d)){
             return 0;
         }
-        return $d->getSaisonPoints();
+        return $d->getPoints();
     }
 
     # gives the rank at a special day
     public function getRank($day, $daily_rank){
         $d = $this->days[$day];
-        /* @var $d \Application\Model\Day  */
+        /* @var $d \Application\Model\UserDay  */
         if (!isset($d)){
             return -1;
         }
@@ -77,9 +83,25 @@ class User {
 
     public function setRank($rank, $day, $daily_rank){
         $d = $this->days[$day];
-        /* @var $d \Application\Model\Day  */
+        /* @var $d \Application\Model\UserDay  */
         if (isset($d)){
             $d->setRank($rank, $daily_rank);
         }
+    }
+
+    public function getMatchData($day){
+        $result = array();
+        $d = $this->days[$day];
+        /* @var $d \Application\Model\UserDay  */
+        if (isset($d)){
+            foreach ($d->getMatches() as $m) {
+                /* @var $m \Application\Model\Match  */
+                $result[$m->id]['tip1'] = $m->team1tip;
+                $result[$m->id]['tip2'] = $m->team2tip;
+                $result[$m->id]['toddde'] = $m->getToddde();
+                $result[$m->id]['points'] = $m->getPoints();
+            }
+        }
+        return $result;
     }
 }

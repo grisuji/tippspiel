@@ -70,11 +70,11 @@
                     ?>
                 </td>
                 <td><?php
-                    if ($m->points > 0) echo $this->escapeHtml($m->points);
+                    if ($m->getPoints() > 0) echo $this->escapeHtml($m->getPoints());
                     ?>
                 </td>
                 <td style="color:#A4A4A4"><?php
-                    if ($m->toddepoints > 0) echo $this->escapeHtml($m->toddepoints);
+                    if ($m->getToddde() > 0) echo $this->escapeHtml($m->getToddde());
                     ?>
                 </td>
             </tr>

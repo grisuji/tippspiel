@@ -103,8 +103,7 @@ class UserpointsController extends AbstractActionController{
                 $m->team1tip = "";
                 $m->team2tip = "";
             }
-            $m->points = $grisuji_pointhelper->getPoints($m->team1goals, $m->team2goals, $m->team1tip, $m->team2tip);
-            $m->toddepoints = $todde_pointhelper->getPoints($m->team1goals, $m->team2goals, $m->team1tip, $m->team2tip);
+            $m->setPoints();
         }
         $viewModel = new viewModel(array('matches' => $matches, 'form' => $form, 'userinfo' => $userinfo));
         return $viewModel;

@@ -60,12 +60,14 @@ class RankController  extends AbstractActionController{
             }
             $saison->addMatch($m);
         }
+        $saison->sort($day);
+        $live = $saison->getMatchDataByDay($day);
+        $user = $saison->getUserDataByDay($day);
 
-        usort($user, array($this, "cmp_points"));
-        $jsons = array(
-            "linechart" => json_encode($this->genHighChartLine(2014, $user, $day))
-        );
-        $view = new ViewModel(array('user'=>$user, 'day'=>$day, 'live'=>$live, 'json'=>$jsons));
+#        $jsons = array(
+#            "linechart" => json_encode($this->genHighChartLine(2014, $user, $day))
+#        );
+        $view = new ViewModel(array('user'=>$user, 'day'=>$day, 'live'=>$live));#, 'json'=>$jsons));
 
         return $view;
     }

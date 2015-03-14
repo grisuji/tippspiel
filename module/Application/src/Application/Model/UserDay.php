@@ -8,7 +8,7 @@
 
 namespace Application\Model;
 
-class Day {
+class UserDay {
     public $day;
     private $points = 0;
     private $toddde = 0;
@@ -72,4 +72,7 @@ class Day {
         return $this->rank_in_day;
     }
 
+    public function getMatches() {
+        return $this->matches;
+    }
 }
