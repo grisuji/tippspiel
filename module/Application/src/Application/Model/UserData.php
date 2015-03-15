@@ -7,9 +7,10 @@
  */
 
 namespace Application\Model;
+use Zend\Debug\Debug;
 
 # manage a single user
-class User {
+class UserData {
     public $id;
     public $name;
     public $points = 0;
@@ -28,7 +29,7 @@ class User {
         }
         $d = $this->days[$match->day];
         if (!isset($d)) {
-            $d = new UserDay();
+            $d = new UserDay($match->day);
         }
         $d->addMatch($match);
         $this->days[$match->day] = $d;
@@ -47,7 +48,7 @@ class User {
         }
     }
 
-    public function getToddde($day=0){
+    public function getToddde($day=0, $daily=true){
         if ($day==0) {
             return $this->toddde;
         }
@@ -59,7 +60,7 @@ class User {
         return $d->getToddde();
     }
 
-    public function getPoints($day=0){
+    public function getPoints($day=0, $daily=true){
         if ($day==0) {
             return $this->points;
         }
@@ -73,11 +74,11 @@ class User {
 
     # gives the rank at a special day
     public function getRank($day, $daily_rank){
-        $d = $this->days[$day];
-        /* @var $d \Application\Model\UserDay  */
-        if (!isset($d)){
+        if (!isset($this->days[$day])){
             return -1;
         }
+        $d = $this->days[$day];
+        /* @var $d \Application\Model\UserDay  */
         return $d->getRank($daily_rank);
     }
 

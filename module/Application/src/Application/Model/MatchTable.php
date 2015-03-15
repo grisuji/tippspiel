@@ -85,6 +85,7 @@ class MatchTable {
         $select->join(array('team1' => 'teams'), 'team1.id=matches.team1id', array('team1name' => 'longname', 'team1emblem' => 'emblem'), 'left');
         $select->join(array('team2' => 'teams'), 'team2.id=matches.team2id', array('team2name' => 'longname', 'team2emblem' => 'emblem'),'left');
         $select->join('user', 'user.id=tips.userid', array('username' => 'name'),'left');
+        $select->order('date_time ASC');
         $where = new Where();
         $where->equalTo('saison',(int) $saison)
             ->AND

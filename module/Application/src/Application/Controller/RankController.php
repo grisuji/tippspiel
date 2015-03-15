@@ -8,8 +8,6 @@
 
 namespace Application\Controller;
 use Application\Model\Saison;
-use Application\Rules\GrisujiPoints;
-use Application\Rules\ToddePoints;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use DateTime;
@@ -19,10 +17,10 @@ use Zend\Debug\Debug;
 class RankController  extends AbstractActionController{
 
     private static function cmp_points($a, $b) {
-        if ($a['points'] == $b['points']) {
+        if ($a['rank'] == $b['rank']) {
             return RankController::cmp_name($a, $b);
         } else {
-            return ($a['points'] > $b['points']) ? -1 : 1;
+            return ($a['rank'] < $b['rank']) ? -1 : 1;
         }
     }
 
@@ -49,7 +47,6 @@ class RankController  extends AbstractActionController{
 
         $saison = new Saison();
         $now = new DateTime();
-
         foreach($matches as $m) {
             if ($m->userid < 2) continue;
             # hide all future tips
@@ -60,9 +57,12 @@ class RankController  extends AbstractActionController{
             }
             $saison->addMatch($m);
         }
+        $saison->setPoints();
         $saison->sort($day);
         $live = $saison->getMatchDataByDay($day);
+        Debug::dump($live);
         $user = $saison->getUserDataByDay($day);
+        usort($user, array($this, "cmp_points"));
 
 #        $jsons = array(
 #            "linechart" => json_encode($this->genHighChartLine(2014, $user, $day))

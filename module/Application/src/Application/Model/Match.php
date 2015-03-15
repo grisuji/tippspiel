@@ -30,7 +30,7 @@ class Match {
     public $team2tip;
 
     private $points = 0;
-    private $todde = 0;
+    private $toddde = 0;
 
     public function exchangeArray($data)
     {
@@ -61,11 +61,11 @@ class Match {
         $toddehelper = new ToddePoints();
 
         $this->points = $pointhelper->getPoints($this->team1goals, $this->team2goals, $this->team1tip, $this->team2tip);
-        $this->todde = $toddehelper->getPoints($this->team1goals, $this->team2goals, $this->team1tip, $this->team2tip);
+        $this->toddde = $toddehelper->getPoints($this->team1goals, $this->team2goals, $this->team1tip, $this->team2tip);
     }
 
     public function getToddde(){
-        return $this->todde;
+        return $this->toddde;
     }
 
     public function getPoints(){

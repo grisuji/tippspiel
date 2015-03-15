@@ -15,26 +15,26 @@
                 style="color:red"
                 <?php endif ?>
                 >
-                <img src="<?php echo $this->basePath().'/img/emblem/'.$this->live[$matchid]['emblem1'];?>"/>< /br>
+                <img src="<?php echo $this->basePath().'/img/emblem/'.$this->live[$matchid]['emblem1'];?>"/></br>
                 <?php if (isset($live[$matchid]['goals1'])) {
                     echo $live[$matchid]['goals1'];
                     echo ":";
                     echo $live[$matchid]['goals2'];
                 }?>
-                < /br>
+                </br>
                 <img src="<?php echo $this->basePath().'/img/emblem/'.$this->live[$matchid]['emblem2'];?>"/>
 
             </th>
             <?php } ?>
             <th style="color:#A4A4A4">Toddde</th>
         </tr>
-        <?php $platz=0;
-                $mem_points = -1;
+        <?php
+                $mem_rank = -1;
                 foreach($this->user as $id => $u){
                     ?>
             <tr>
                 <td>
-                    <?php $platz++; if ($mem_points!= $u['points']) { echo $platz; } ?>
+                    <?php if ($mem_points!= $u['rank']) { echo $u['rank']; } ?>
                 </td>
                 <td>
                     <a href="<?php echo $this->url('application/userpoints', array('userid' => $u['id'], 'day' => $this->day)) ?>"><?php echo $this->escapeHtml($u['name']);?></a>
@@ -62,11 +62,11 @@
                     </td>
                 <?php } ?>
                 <td style="color:#A4A4A4">
-                    <?php echo $this->escapeHtml($u['todde']); echo "/" ; echo $this->escapeHtml($u['todde_all']);?>
+                    <?php echo $this->escapeHtml($u['toddde']); echo "/" ; echo $this->escapeHtml($u['toddde_all']);?>
                 </td>
             </tr>
         <?php
-            $mem_points = $u['points'];
+            $mem_rank = $u['rank'];
                   } ?>
     </table>
     <div id="hc_container" style="min-width: 600px; height: 400px; margin: 0 auto"></div>

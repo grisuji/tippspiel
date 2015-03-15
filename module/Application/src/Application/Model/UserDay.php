@@ -7,6 +7,7 @@
  */
 
 namespace Application\Model;
+use Zend\Debug\Debug;
 
 class UserDay {
     public $day;
@@ -18,8 +19,13 @@ class UserDay {
     private $rank_in_saison = -1;
     private $rank_in_day = -1;
 
+
+    function __construct($day){
+        $this->day = $day;
+    }
+
     public function addMatch($match) {
-        $matches[$match->id] = $match;
+        $this->matches[$match->id] = $match;
     }
 
     public function setPoints(){
@@ -33,20 +39,18 @@ class UserDay {
         }
     }
 
-    public function getToddde(){
+    public function getToddde($daily=true){
+        if (!$daily) {
+            return $this->saison_toddde;
+        }
         return $this->toddde;
     }
 
-    public function getPoints(){
+    public function getPoints($daily=true){
+        if (!$daily) {
+            return $this->saison_points;
+        }
         return $this->points;
-    }
-
-    public function getSaisonToddde(){
-        return $this->saison_toddde;
-    }
-
-    public function getSaisonPoints(){
-        return $this->saison_points;
     }
 
     public function setSaisonToddde($p){
@@ -57,16 +61,16 @@ class UserDay {
         $this->saison_points = $p;
     }
 
-    public function setRank($rank, $day=false){
-        if (!$day){
+    public function setRank($rank, $daily=false){
+        if (!$daily){
             $this->rank_in_saison = $rank;
         } else {
             $this->rank_in_day = $rank;
         }
     }
 
-    public function getRank($day=false){
-        if (!$day){
+    public function getRank($daily=false){
+        if (!$daily){
             return $this->rank_in_saison;
         }
         return $this->rank_in_day;
