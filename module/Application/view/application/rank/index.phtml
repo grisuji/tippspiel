@@ -1,7 +1,17 @@
 <?php $this->headScript()
-            ->appendFile($this->basePath().'/js/highcharts.js', 'text/javascript')
-            ->appendScript('$(function () {$("#hc_container").highcharts('.$this->json["linechart"].') });');
-    echo $this->headScript();
+    ->appendFile($this->basePath().'/js/highcharts.js', 'text/javascript')
+    ->appendScript('$(function () {$("#hc_container").highcharts(
+    {
+     "chart":{"type":"line","zoomType":"x"},
+     "title":{"text":"Der Platzierungsverlauf während der Saison","x":-20},
+     "subtitle":{"text":"Saison 2014","x":-20},
+     "xAxis":{"categories":'.$this->hc_xaxis_data.'},
+     "yAxis":{"reversed":true,"title":{"text":"Platzierungen"},"type":"linear","plotlines":[{"value":0,"width":1,"color":"#808080"}]},"tooltip":{"valueSuffix":". Platz"},"legend":{"layout":"horizontal","align":"center","verticalAlign":"bottom","borderWidth":0},
+     tooltip:{formatter: function () { return this.series.name + "<br/>Spieltag: "+ this.x +"<br/>Platz: "+ this.y +"<br/>Punkte: " + this.point.z;}},
+     "series":'.$this->hc_yaxis_data.'
+    }
+    )});');
+echo $this->headScript();
 ?>
 <section class="ranking">
     <h2>Spieltag  <?php echo $this->day ?></h2>
@@ -11,27 +21,27 @@
             <th></th>
             <th></th>
             <?php foreach ($this->live['matches'] as $matchid) { ?>
-            <th <?php if($this->live[$matchid]['finished'] == 0): ?>
-                style="color:red"
+                <th <?php if($this->live[$matchid]['finished'] == 0): ?>
+                    style="color:red"
                 <?php endif ?>
-                >
-                <img src="<?php echo $this->basePath().'/img/emblem/'.$this->live[$matchid]['emblem1'];?>"/></br>
-                <?php if (isset($live[$matchid]['goals1'])) {
-                    echo $live[$matchid]['goals1'];
-                    echo ":";
-                    echo $live[$matchid]['goals2'];
-                }?>
-                </br>
-                <img src="<?php echo $this->basePath().'/img/emblem/'.$this->live[$matchid]['emblem2'];?>"/>
+                    >
+                    <img src="<?php echo $this->basePath().'/img/emblem/'.$this->live[$matchid]['emblem1'];?>"/></br>
+                    <?php if (isset($live[$matchid]['goals1'])) {
+                        echo $live[$matchid]['goals1'];
+                        echo ":";
+                        echo $live[$matchid]['goals2'];
+                    }?>
+                    </br>
+                    <img src="<?php echo $this->basePath().'/img/emblem/'.$this->live[$matchid]['emblem2'];?>"/>
 
-            </th>
+                </th>
             <?php } ?>
             <th style="color:#A4A4A4">Toddde</th>
         </tr>
         <?php
-                $mem_rank = -1;
-                foreach($this->user as $id => $u){
-                    ?>
+        $mem_rank = -1;
+        foreach($this->user as $id => $u){
+            ?>
             <tr>
                 <td>
                     <?php if ($mem_points!= $u['rank']) { echo $u['rank']; } ?>
@@ -44,8 +54,8 @@
                 </td>
                 <?php foreach ($this->live['matches'] as $matchid) { ?>
                     <td <?php if ($u['matches'][$matchid] == 0): ?>
-                      style="color:#A4A4A4"
-                        <?php endif ?>
+                        style="color:#A4A4A4"
+                    <?php endif ?>
                         >
                         <?php if (isset($u['matches'][$matchid]['tip1'])) {
                             echo $u['matches'][$matchid]['tip1'];
@@ -65,9 +75,9 @@
                     <?php echo $this->escapeHtml($u['toddde']); echo "/" ; echo $this->escapeHtml($u['toddde_all']);?>
                 </td>
             </tr>
-        <?php
+            <?php
             $mem_rank = $u['rank'];
-                  } ?>
+        } ?>
     </table>
     <div id="hc_container" style="min-width: 600px; height: 400px; margin: 0 auto"></div>
 </section>

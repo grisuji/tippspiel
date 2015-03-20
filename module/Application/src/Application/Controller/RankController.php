@@ -58,182 +58,25 @@ class RankController  extends AbstractActionController{
             $saison->addMatch($m);
         }
         $saison->setPoints();
-        $saison->sort($day);
+        $saison->sortAllDays();
         $live = $saison->getMatchDataByDay($day);
-        Debug::dump($live);
         $user = $saison->getUserDataByDay($day);
         usort($user, array($this, "cmp_points"));
-
-#        $jsons = array(
-#            "linechart" => json_encode($this->genHighChartLine(2014, $user, $day))
-#        );
-        $view = new ViewModel(array('user'=>$user, 'day'=>$day, 'live'=>$live));#, 'json'=>$jsons));
+#        Debug::dump("day" );
+#        Debug::dump($saison->getDays($day));
+#        Debug::dump("---");
+#        Debug::dump($saison->getHighchartUserRanks($day));
+        $hc_yaxis_data = json_encode($saison->getHighchartUserRanks($day));
+        $hc_xaxis_data = json_encode($saison->getDays($day));
+        $view = new ViewModel(
+            array(
+                'user'=>$user,
+                'day'=>$day,
+                'live'=>$live,
+                'hc_yaxis_data'=>$hc_yaxis_data,
+                'hc_xaxis_data'=>$hc_xaxis_data
+            ));
 
         return $view;
-    }
-
-    private function genHighChartLine($saison, $userdata, $day){
-
-        $minday=36;
-        # find the first day with non-zero-points
-        foreach ($userdata as $id=>$u) {
-            for ($actday = 1; $actday <= $day; $actday++) {
-                if ($u[$actday] > 0) {
-                    $minday = min($minday, $actday);
-                    break 2;
-                }
-            }
-        }
-                # create some arrays with data
-        $spieltage=array();
-        for ($d=$minday; $d <= $day; $d++) {
-            array_push($spieltage, $d);
-        }
-        $linechart = array();
-        $linechart['chart'] = array(
-            'type' => 'column',
-            'zoomType' => "x"
-        );
-        $linechart["title"] = array(
-            'text' => "Spielerpunkte pro Spieltag",
-            'x' => -20
-        );
-
-        $linechart["subtitle"] = array(
-            'text' => "Saison " . $saison,
-            'x' => -20
-        );
-
-        $linechart["xAxis"] = array(
-            'categories' => $spieltage
-        );
-
-        $linechart["yAxis"] = array(
-            'title' => array(
-                'text' => "cumulierte Punkte"
-            ),
-            'type' => 'linear',
-            'plotlines' => array(array(
-                'value' => 0,
-                'width' => 1,
-                'color' => "#808080"
-            ))
-        );
-
-        $linechart["plotOptions"] = array(
-            'column' => array(
-                #'stacking' => "percent",
-                'stacking' => "normal",
-                'pointPadding' => 0.2,
-                'borderWidth' => 0
-            )
-        );
-
-        $linechart["tooltip"] = array(
-            'valueSuffix' => ' Punkte'
-        );
-
-        $linechart["legend"] = array(
-            'layout' => "horizontal",
-            'align' => "center",
-            'verticalAlign' => "bottom",
-            'borderWidth' => 0
-        );
-        $linechart["series"] = array(
-
-        );
-
-        foreach ($userdata as $id=>$u) {
-            $data = array_fill(0, 1+$day-$minday, 0);
-            for ($actday=$minday; $actday<=$day; $actday++) {
-                    $data[$actday-$minday] = $u[$actday];
-            }
-            $new_user=array(
-                'name' => $u['name'],
-                'data' => $data
-            );
-            array_push($linechart["series"], $new_user);
-        }
-#        Debug::dump(json_encode($linechart));
-        return $linechart;
-    }
-
-    private function genHighChartCumLine($saison, $userdata, $day){
-
-        $minday=36;
-        # find the first day with non-zero-points
-        foreach ($userdata as $id=>$u) {
-            for ($actday = 1; $actday <= $day; $actday++) {
-                if ($u[$actday] > 0) {
-                    $minday = min($minday, $actday);
-                    break 2;
-                }
-            }
-        }
-        # create some arrays with data
-        $spieltage=array();
-        for ($d=$minday; $d <= $day; $d++) {
-            array_push($spieltage, $d);
-        }
-        $linechart = array();
-        $linechart['chart'] = array(
-            'type' => 'line',
-            'zoomType' => "x"
-        );
-        $linechart["title"] = array(
-            'text' => "Entwicklung der Spielerpunkte",
-            'x' => -20
-        );
-
-        $linechart["subtitle"] = array(
-            'text' => "Saison " . $saison,
-            'x' => -20
-        );
-
-        $linechart["xAxis"] = array(
-            'categories' => $spieltage
-        );
-
-        $linechart["yAxis"] = array(
-            'title' => array(
-                'text' => "Gesamtpunkte"
-            ),
-            'type' => 'linear',
-            'plotlines' => array(array(
-                'value' => 0,
-                'width' => 1,
-                'color' => "#808080"
-            ))
-        );
-
-        $linechart["tooltip"] = array(
-            'valueSuffix' => ' Punkte'
-        );
-
-        $linechart["legend"] = array(
-            'layout' => "horizontal",
-            'align' => "center",
-            'verticalAlign' => "bottom",
-            'borderWidth' => 0
-        );
-        $linechart["series"] = array(
-
-        );
-
-        foreach ($userdata as $id=>$u) {
-            $data = array_fill(0, 1+$day-$minday, 0);
-            for ($actday=$minday; $actday<=$day; $actday++) {
-                for ($d=$actday; $d<=$day; $d++) {
-                    $data[$d-$minday] += $u[$actday];
-                }
-            }
-            $new_user=array(
-                'name' => $u['name'],
-                'data' => $data
-            );
-            array_push($linechart["series"], $new_user);
-        }
-#        Debug::dump(json_encode($linechart));
-        return $linechart;
     }
 }

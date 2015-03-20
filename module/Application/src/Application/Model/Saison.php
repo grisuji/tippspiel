@@ -14,6 +14,7 @@ use Zend\Debug\Debug;
 
 class Saison {
     public $users = array();
+    public $days = array();
 
     private static function cmp_name($a, $b) {
         $n1 = strtoupper($a["name"]);
@@ -47,10 +48,21 @@ class Saison {
         }
     }
 
+    public function sortAllDays(){
+        foreach ($this->days as $day) {
+            $this->sort($day);
+        }
+    }
 
+    /* @var $match  \Application\Model\Match */
     public function addMatch($match){
         $user = $this->users[$match->userid];
         /* @var $user  \Application\Model\UserData */
+        $day = intval($match->day);
+        if (!in_array($day, $this->days)) {
+            $this->days[] = $day;
+            natsort($this->days);
+        }
 
         if (!isset($user)){
             $user = new UserData($match);
@@ -102,11 +114,42 @@ class Saison {
             $result[$u->id]['id'] = $u->id;
             $result[$u->id]['name'] = $u->name;
             $result[$u->id]['rank'] = $u->getRank($day, false);
-            $result[$u->id]['toddde'] = $u->getToddde($day);
-            $result[$u->id]['points'] = $u->getPoints($day);
-            $result[$u->id]['toddde_all'] = $u->getToddde();
-            $result[$u->id]['points_all'] = $u->getPoints();
+            $result[$u->id]['toddde'] = $u->getToddde($day, true);
+            $result[$u->id]['points'] = $u->getPoints($day, true);
+            $result[$u->id]['toddde_all'] = $u->getToddde($day);
+            $result[$u->id]['points_all'] = $u->getPoints($day);
             $result[$u->id]['matches'] = $u->getMatchData($day);
+        }
+        return $result;
+    }
+
+    public function getDays($maxday=0){
+        if ($maxday == 0) return $this->days;
+        $result=array();
+        foreach ($this->days as $day) {
+            if ($day > $maxday) continue;
+            $result[] = $day;
+        }
+        return $result;
+    }
+
+    public function getHighchartUserRanks($maxday){
+        $result = array();
+        foreach ($this->users as $u ) {
+            /* @var $u  \Application\Model\UserData */
+            $data = array();
+            foreach ($u->days as $d) {
+                $day = $d->day;
+                if ($day > $maxday) continue;
+                $rank = $u->getRank($day, false);
+                $points = $u->getPoints($day, false);
+                $data[] = array( 'x' => $day , 'y' => $rank, 'z' => $points);
+            }
+            $new_user = array(
+                'name' => $u->name,
+                'data' => $data
+                );
+            $result[] = $new_user;
         }
         return $result;
     }

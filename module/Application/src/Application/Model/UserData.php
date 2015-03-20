@@ -30,9 +30,9 @@ class UserData {
         $d = $this->days[$match->day];
         if (!isset($d)) {
             $d = new UserDay($match->day);
+            $this->days[$match->day] = $d;
         }
         $d->addMatch($match);
-        $this->days[$match->day] = $d;
     }
 
     public function setPoints(){
@@ -60,7 +60,7 @@ class UserData {
         return $d->getToddde();
     }
 
-    public function getPoints($day=0, $daily=true){
+    public function getPoints($day=0, $daily=false){
         if ($day==0) {
             return $this->points;
         }
@@ -69,16 +69,16 @@ class UserData {
         if (!isset($d)){
             return 0;
         }
-        return $d->getPoints();
+        return $d->getPoints($daily);
     }
 
     # gives the rank at a special day
     public function getRank($day, $daily_rank){
-        if (!isset($this->days[$day])){
-            return -1;
-        }
         $d = $this->days[$day];
         /* @var $d \Application\Model\UserDay  */
+        if (!isset($d)){
+            return -1;
+        }
         return $d->getRank($daily_rank);
     }
 
