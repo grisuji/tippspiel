@@ -26,7 +26,7 @@ echo $this->headScript();
                 <?php endif ?>
                     >
                     <img src="<?php echo $this->basePath().'/img/emblem/'.$this->live[$matchid]['emblem1'];?>"/></br>
-                    <?php if (isset($live[$matchid]['goals1'])) {
+                    <?php if ($live[$matchid]['goals1']!="") {
                         echo $live[$matchid]['goals1'];
                         echo ":";
                         echo $live[$matchid]['goals2'];
@@ -44,7 +44,7 @@ echo $this->headScript();
             ?>
             <tr>
                 <td>
-                    <?php if ($mem_points!= $u['rank']) { echo $u['rank']; } ?>
+                    <?php if ($mem_rank!= $u['rank']) { echo $u['rank']; } ?>
                 </td>
                 <td>
                     <a href="<?php echo $this->url('application/userpoints', array('userid' => $u['id'], 'day' => $this->day)) ?>"><?php echo $this->escapeHtml($u['name']);?></a>

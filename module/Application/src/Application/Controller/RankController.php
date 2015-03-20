@@ -57,15 +57,16 @@ class RankController  extends AbstractActionController{
             }
             $saison->addMatch($m);
         }
+        $saison->fillMissingDays();
         $saison->setPoints();
         $saison->sortAllDays();
         $live = $saison->getMatchDataByDay($day);
         $user = $saison->getUserDataByDay($day);
         usort($user, array($this, "cmp_points"));
-#        Debug::dump("day" );
-#        Debug::dump($saison->getDays($day));
-#        Debug::dump("---");
-#        Debug::dump($saison->getHighchartUserRanks($day));
+        #Debug::dump($live );
+        #Debug::dump($saison->getDays($day));
+        #Debug::dump("---");
+        #Debug::dump($saison->getHighchartUserRanks($day));
         $hc_yaxis_data = json_encode($saison->getHighchartUserRanks($day));
         $hc_xaxis_data = json_encode($saison->getDays($day));
         $view = new ViewModel(

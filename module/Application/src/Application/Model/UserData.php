@@ -105,4 +105,28 @@ class UserData {
         }
         return $result;
     }
+
+    # gives the last day before $day,
+    # if there is no day before, return 0
+    public function getNearestDay($day) {
+        $first = reset($this->days);
+        $current = $day;
+        while ($current > $first) {
+            if (isset($this->days[$current])) {
+                return $current;
+            }
+            $current--;
+        }
+        return $day;
+    }
+
+    public function fillDummyDays($last){
+        $first = reset($this->days);
+        /* @var $first \Application\Model\UserDay  */
+        for ($d = $first->day; $d <= $last; $d++) {
+            if (!isset($this->days[$d])) {
+                $this->days[$d] = new UserDay($d);
+            }
+        }
+    }
 }

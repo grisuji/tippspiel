@@ -38,13 +38,14 @@ class Saison {
         $a = $this->getUserDataByDay($day);
         usort($a, array($this, "cmp_points"));
         $rank = 0;
-        $oldpoints = -1;
+        $mempoints = -1;
         foreach ($a as $u){
-            if ($oldpoints != $u["points_all"]) $rank++;
+            $rank++;
+            if ($mempoints != $u["points_all"]) $setrank=$rank;
             $user = $this->users[$u["id"]];
             /* @var $user  \Application\Model\UserData */
-            $user->setRank($rank, $day, false);
-            $oldpoints = $u["points_all"];
+            $user->setRank($setrank, $day, false);
+            $mempoints = $u["points_all"];
         }
     }
 
@@ -88,6 +89,7 @@ class Saison {
             if (isset($d)) {
                 foreach ($d->getMatches() as $m) {
                     /* @var $m  \Application\Model\Match */
+                    if (isset($result[$m->id])) continue;
                     array_push($result['matches'], $m->id);
                     $result[$m->id] = array();
                     $result[$m->id]['emblem1'] = $m->team1emblem;
@@ -98,18 +100,19 @@ class Saison {
                         $result[$m->id]['finished'] = $m->isfinished;
                     }
                 }
-                return $result;
+                #return $result;
             }
         }
         return $result;
     }
 
     # returns an array with the points of all users at a special day
-    public function getUserDataByDay($day){
+    public function getUserDataByDay($xday){
         $result = array();
 
         foreach ($this->users as $u){
             /* @var $u  \Application\Model\UserData */
+            $day = $u->getNearestDay($xday);
             $result[$u->id] = array();
             $result[$u->id]['id'] = $u->id;
             $result[$u->id]['name'] = $u->name;
@@ -145,6 +148,10 @@ class Saison {
                 $points = $u->getPoints($day, false);
                 $data[] = array( 'x' => $day , 'y' => $rank, 'z' => $points);
             }
+            $lastset = end($data);
+            if ($lastset['x']!=$maxday) {
+                $data[] = array ( 'x' => $maxday, 'y' => $lastset['y'], 'z' => $lastset['z']);
+            }
             $new_user = array(
                 'name' => $u->name,
                 'data' => $data
@@ -152,5 +159,12 @@ class Saison {
             $result[] = $new_user;
         }
         return $result;
+    }
+
+    public function fillMissingDays(){
+        foreach ($this->users as $u) {
+            /* @var $u  \Application\Model\UserData */
+            $u->fillDummyDays(end($this->days));
+        }
     }
 }
