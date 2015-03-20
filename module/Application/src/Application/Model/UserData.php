@@ -48,7 +48,7 @@ class UserData {
         }
     }
 
-    public function getToddde($day=0, $daily=true){
+    public function getToddde($day=0, $daily=false){
         if ($day==0) {
             return $this->toddde;
         }
@@ -57,7 +57,7 @@ class UserData {
         if (!isset($d)){
             return 0;
         }
-        return $d->getToddde();
+        return $d->getToddde($daily);
     }
 
     public function getPoints($day=0, $daily=false){

@@ -64,6 +64,7 @@ class RankController  extends AbstractActionController{
         $user = $saison->getUserDataByDay($day);
         usort($user, array($this, "cmp_points"));
         #Debug::dump($live );
+        #Debug::dump($user);
         #Debug::dump($saison->getDays($day));
         #Debug::dump("---");
         #Debug::dump($saison->getHighchartUserRanks($day));
