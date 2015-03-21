@@ -62,7 +62,6 @@ class UserpointsController extends AbstractActionController{
         if($this->getAuthService()->hasIdentity()) {
             $logged_in_id = $this->getAuthService()->getStorage()->read()->id;
         }
-        Debug::dump("a");
 
         if (empty($userid)) {
             if ($logged_in_id > 1) {
@@ -113,10 +112,19 @@ class UserpointsController extends AbstractActionController{
 
         $live = $saison->getMatchDataByDay($day);
         $user = $saison->getUserDataByDay($day)[$userid];
-        $data = $saison->getHighChartTipPoints($day)[$userid]["data"];
-        Debug::dump(json_encode($data));
-        Debug::dump($user);
-        $viewModel = new viewModel(array('live' => $live, 'user' => $user, 'form' => $form, 'userinfo' => $userinfo, 'hc_data' => json_encode($data)));
+        $missing_point_data = $saison->getHighChartTipPoints($day)[$userid]["data"];
+        $won_point_data = $saison->getHighChartResultPoints($day)[$userid]["data"];
+
+        #Debug::dump(json_encode($missing_point_data));
+        #Debug::dump(json_encode($won_point_data));
+        #Debug::dump($user);
+        $viewModel = new viewModel(array('live' => $live
+            , 'user' => $user
+            , 'form' => $form
+            , 'userinfo' => $userinfo
+            , 'hc_tipdata' => json_encode($missing_point_data)
+            , 'hc_resdata' => json_encode($won_point_data)
+        ));
         return $viewModel;
 
     }

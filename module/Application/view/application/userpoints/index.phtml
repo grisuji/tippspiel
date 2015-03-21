@@ -1,52 +1,48 @@
 <?php $this->headScript()
     ->appendFile($this->basePath().'/js/highcharts.js', 'text/javascript')
-    ->appendScript('$(function () {$("#hc_container").highcharts(
+    ->appendFile('http://code.highcharts.com/modules/heatmap.js', 'text/javascript')
+    ->appendScript('$(function () {$("#hc_tipp_container").highcharts(
     {
-    chart: {
-        type: "heatmap",
-        marginTop: 40,
-        marginBottom: 80
-        },
-    title: {
-        text: "verlorene Punkte bei Tipps"
-        },
-    xAxis: {
-        categories: ["0", "1", "2", "3", "4", "5", ">5"]
-    },
-    yAxis: {
-        categories: ["0", "1", "2", "3", "4", "5", ">5"],
-        title: null
-    },
-    colorAxis: {
-        min: 0,
-        minColor: "#FFFFFF",
-        maxColor: Highcharts.getOptions().colors[0]
-    },
-    legend: {
-        align: "right",
-        layout: "vertical",
-        margin: 0,
-        verticalAlign: "top",
-        y: 25,
-        symbolHeight: 280
-    },
-    tooltip: {
-        formatter: function () {
-            return "<b> Tipp " + this.series.xAxis.categories[this.point.x] +":"+ this.series.yAxis.categories[this.point.y]+ "</b> Verluste <br><b>" +
-            this.point.value + "";
-        }
-    },
+    "chart": {        type: "heatmap",        marginTop: 40,        marginBottom: 80        },
+    title: {        text: "verlorene Punkte bei Tipps"        },
+    xAxis: {        categories: ["0", "1", "2", "3", "4", "5", ">5"]    },
+    yAxis: {        categories: ["0", "1", "2", "3", "4", "5", ">5"],        title: null    },
+    colorAxis: {        min: 0,        minColor: "#FFFFFF",        maxColor: "#FF0000", gridLineColor:  "#FF0000"   },
+    legend: {        align: "right",        layout: "vertical",        margin: 0,        verticalAlign: "top",        y: 25,        symbolHeight: 280    },
+    tooltip:{formatter: function () { return "Bei <b>"+ this.point.x +":"+ this.point.y +"</b> Tipps <br/>gingen " + this.point.value + " Punkte<br/>verloren." ;}},
     series: [{
         name: "Verlorene Punkte bei Tipp",
         borderWidth: 1,
-        data: '.$this->hc_data.',
+        data: '.$this->hc_tipdata.',
         dataLabels: {
-        enabled: true,
-        color: "#000000"
-        }
-    }]
-});
-});');
+                enabled: true,
+                color: "#000000"
+                }
+        }]
+        });
+    });'
+    )
+    ->appendScript('$(function () {$("#hc_res_container").highcharts(
+    {
+    "chart": {        type: "heatmap",        marginTop: 40,        marginBottom: 80        },
+    title: {        text: "gewonnene Punkte bei Ergebissen"        },
+    xAxis: {        categories: ["0", "1", "2", "3", "4", "5", ">5"]    },
+    yAxis: {        categories: ["0", "1", "2", "3", "4", "5", ">5"],        title: null    },
+    colorAxis: {        min: 0,        minColor: "#FFFFFF",        maxColor: "#00FF00"    },
+    legend: {        align: "right",        layout: "vertical",        margin: 0,        verticalAlign: "top",        y: 25,        symbolHeight: 280    },
+    tooltip:{formatter: function () { return "Bei <b>"+ this.point.x +":"+ this.point.y +"</b> Ergebnissen <br/>wurden " + this.point.value + " Punkte<br/>gewonnen." ;}},
+    series: [{
+        name: "Verlorene Punkte bei Tipp",
+        borderWidth: 1,
+        data: '.$this->hc_resdata.',
+        dataLabels: {
+                enabled: true,
+                color: "#000000"
+                }
+        }]
+        });
+    });'
+    );
 echo $this->headScript();
 ?>
 
@@ -134,6 +130,7 @@ echo $this->headScript();
             </tr>
         <?php endforeach; ?>
     </table>
-    <div id="hc_container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+    <div id="hc_tipp_container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+    <div id="hc_res_container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
 
 </section>

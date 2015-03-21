@@ -171,36 +171,81 @@ class Saison {
         $result = array();
         foreach ($this->users as $u ) {
             /* @var $u  \Application\Model\UserData */
-            $data = array();
+            $pointmatrix = array(array());
+            $matchmatrix = array(array());
+
+            for ($i=0;$i<=6;$i++){
+                for ($j=0;$j<=6;$j++){
+                    $pointmatrix[$i][$j] = 0;
+                    $matchmatrix[$i][$j] = 0;
+                }
+            }
             foreach ($u->days as $d) {
                 /* @var $d  \Application\Model\UserDay */
                 $day = $d->day;
                 if ($day > $maxday) continue;
                 $matches = $d->getMatches();
-                $pointmatrix = array(array());
-                $matchmatrix = array(array());
-                for ($i=0;$i<=6;$i++){
-                    for ($j=0;$j<=6;$j++){
-                        $pointmatrix[$i][$j] = 0;
-                        $matchmatrix[$i][$j] = 0;
-                    }
-                }
                 foreach ($matches as $m) {
                     /* @var $m \Application\Model\Match */
                     if ($m->team1goals === "" or $m->team2goals === "" or $m->team1tip === "" or $m->team2tip === "") continue;
                     $tip1=min(intval($m->team1tip), 6);
                     $tip2=min(intval($m->team2tip), 6);
-                    $pointmatrix[$tip1][$tip2] += ($m->getPoints()-8);
+                    $pointmatrix[$tip1][$tip2] += (8-$m->getPoints());
                     $matchmatrix[$tip1][$tip2]++;
                 }
-                $data=array();
-                for ($i=0;$i<=6;$i++){
-                    for ($j=0;$j<=6;$j++){
-                        #$data[] = array("x" => $i, "y" => $j, "z" => $pointmatrix[$i][$j],$matchmatrix[$i][$j]);
-                        $data[] = array( $i, $j, $pointmatrix[$i][$j]);
-                    }
+            }
+            $data=array();
+            for ($i=0;$i<=6;$i++){
+                for ($j=0;$j<=6;$j++){
+                    #$data[] = array("x" => $i, "y" => $j, "z" => $pointmatrix[$i][$j],$matchmatrix[$i][$j]);
+                    $data[] = array( $i, $j,  $pointmatrix[$i][$j]);
                 }
             }
+
+            $new_user = array(
+                'name' => $u->name,
+                'data' => $data
+            );
+            $result[$u->id] = $new_user;
+        }
+        return $result;
+    }
+
+    public function getHighChartResultPoints($maxday) {
+        $result = array();
+        foreach ($this->users as $u ) {
+            /* @var $u  \Application\Model\UserData */
+            $pointmatrix = array(array());
+            $matchmatrix = array(array());
+
+            for ($i=0;$i<=6;$i++){
+                for ($j=0;$j<=6;$j++){
+                    $pointmatrix[$i][$j] = 0;
+                    $matchmatrix[$i][$j] = 0;
+                }
+            }
+            foreach ($u->days as $d) {
+                /* @var $d  \Application\Model\UserDay */
+                $day = $d->day;
+                if ($day > $maxday) continue;
+                $matches = $d->getMatches();
+                foreach ($matches as $m) {
+                    /* @var $m \Application\Model\Match */
+                    if ($m->team1goals === "" or $m->team2goals === "" or $m->team1tip === "" or $m->team2tip === "") continue;
+                    $result1=min(intval($m->team1goals), 6);
+                    $result2=min(intval($m->team2goals), 6);
+                    $pointmatrix[$result1][$result2] += $m->getPoints();
+                    $matchmatrix[$result1][$result2]++;
+                }
+            }
+            $data=array();
+            for ($i=0;$i<=6;$i++){
+                for ($j=0;$j<=6;$j++){
+                    #$data[] = array("x" => $i, "y" => $j, "z" => $pointmatrix[$i][$j],$matchmatrix[$i][$j]);
+                    $data[] = array( $i, $j, $pointmatrix[$i][$j]);
+                }
+            }
+
             $new_user = array(
                 'name' => $u->name,
                 'data' => $data
