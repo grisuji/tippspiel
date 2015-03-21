@@ -11,8 +11,7 @@ namespace Application\Controller;
 use Application\Form\UserpointsForm;
 use Zend\Debug\Debug;
 use Zend\Mvc\Controller\AbstractActionController;
-use Application\Rules\GrisujiPoints;
-use Application\Rules\ToddePoints;
+use Application\Model\Saison;
 use Zend\View\Model\ViewModel;
 use DateTime;
 
@@ -56,8 +55,6 @@ class UserpointsController extends AbstractActionController{
 
     public function indexAction()
     {
-        $grisuji_pointhelper = new GrisujiPoints();
-        $todde_pointhelper = new ToddePoints();
         $userid = $this->getEvent()->getRouteMatch()->getParam('userid');
         $day = $this->getEvent()->getRouteMatch()->getParam('day');
 
@@ -65,6 +62,7 @@ class UserpointsController extends AbstractActionController{
         if($this->getAuthService()->hasIdentity()) {
             $logged_in_id = $this->getAuthService()->getStorage()->read()->id;
         }
+        Debug::dump("a");
 
         if (empty($userid)) {
             if ($logged_in_id > 1) {
@@ -84,7 +82,8 @@ class UserpointsController extends AbstractActionController{
         if (empty($day)) {
             $day = $matchTable->getDayOfNextMatch();
         }
-        $matches = $matchTable->getUserMatchesByDay($userid, $day);
+#        $matches = $matchTable->getUserMatchesByDay($userid, $day);
+        $matches = $matchTable->getSaisonTipsAndMatches(2014);
         $userTable = $this->getServiceLocator()->get('UserTable');
         $userinfo = $userTable->getUser($userid);
         $users = $userTable->fetchAll();
@@ -96,16 +95,28 @@ class UserpointsController extends AbstractActionController{
         }
         $form = new UserpointsForm($day, $userid, $userlist);
 
+        $saison = new Saison();
         $now = new DateTime();
         foreach ($matches as $m) {
+            if ($m->userid < 2) continue;
+            if ($m->userid != $userid) continue;
+            # hide all future tips
             $start = new DateTime($m->start);
             if ($now->getTimestamp() <= $start->getTimestamp() and $userid != $logged_in_id) {
-                $m->team1tip = "";
-                $m->team2tip = "";
+                $m->team1tip = "-";
+                $m->team2tip = "-";
             }
-            $m->setPoints();
+            $saison->addMatch($m);
         }
-        $viewModel = new viewModel(array('matches' => $matches, 'form' => $form, 'userinfo' => $userinfo));
+        $saison->fillMissingDays();
+        $saison->setPoints();
+
+        $live = $saison->getMatchDataByDay($day);
+        $user = $saison->getUserDataByDay($day)[$userid];
+        $data = $saison->getHighChartTipPoints($day)[$userid]["data"];
+        Debug::dump(json_encode($data));
+        Debug::dump($user);
+        $viewModel = new viewModel(array('live' => $live, 'user' => $user, 'form' => $form, 'userinfo' => $userinfo, 'hc_data' => json_encode($data)));
         return $viewModel;
 
     }

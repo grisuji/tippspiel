@@ -1,3 +1,57 @@
+<?php $this->headScript()
+    ->appendFile($this->basePath().'/js/highcharts.js', 'text/javascript')
+    ->appendScript('$(function () {$("#hc_container").highcharts(
+    {
+    chart: {
+        type: "heatmap",
+        marginTop: 40,
+        marginBottom: 80
+        },
+    title: {
+        text: "verlorene Punkte bei Tipps"
+        },
+    xAxis: {
+        categories: ["0", "1", "2", "3", "4", "5", ">5"]
+    },
+    yAxis: {
+        categories: ["0", "1", "2", "3", "4", "5", ">5"],
+        title: null
+    },
+    colorAxis: {
+        min: 0,
+        minColor: "#FFFFFF",
+        maxColor: Highcharts.getOptions().colors[0]
+    },
+    legend: {
+        align: "right",
+        layout: "vertical",
+        margin: 0,
+        verticalAlign: "top",
+        y: 25,
+        symbolHeight: 280
+    },
+    tooltip: {
+        formatter: function () {
+            return "<b> Tipp " + this.series.xAxis.categories[this.point.x] +":"+ this.series.yAxis.categories[this.point.y]+ "</b> Verluste <br><b>" +
+            this.point.value + "";
+        }
+    },
+    series: [{
+        name: "Verlorene Punkte bei Tipp",
+        borderWidth: 1,
+        data: '.$this->hc_data.',
+        dataLabels: {
+        enabled: true,
+        color: "#000000"
+        }
+    }]
+});
+});');
+echo $this->headScript();
+?>
+
+
+
 <section class="userpoints">
     <h1><?php echo $this->userinfo->name ?> </h1>
     <h4><?php echo $this->userinfo->motto ?> </h4>
@@ -44,40 +98,42 @@
             <th>Punkte</th>
             <th style="color:#A4A4A4">Todde</th>
         </tr>
-        <?php $i=0; foreach ($matches as $m) :
+        <?php $i=0; foreach ($this->live['matches'] as $matchid) :
             $i++;
             ?>
             <tr>
-                <td><?php echo $this->escapeHtml($m->start);?></td>
+                <td><?php echo $this->escapeHtml($this->live[$matchid]['start']);?></td>
                 <td>
-                    <img src="<?php echo $this->basePath().'/img/emblem/'.$m->team1emblem;?>"/>
-                    <?php echo $this->escapeHtml($m->team1name);?>
+                    <img src="<?php echo $this->basePath().'/img/emblem/'.$this->live[$matchid]['emblem1'];?>"/>
+                    <?php echo $this->escapeHtml($this->live[$matchid]['name1']);?>
                 </td>
                 <td>
-                    <img src="<?php echo $this->basePath().'/img/emblem/'.$m->team2emblem;?>"/>
-                    <?php echo $this->escapeHtml($m->team2name);?>
+                    <img src="<?php echo $this->basePath().'/img/emblem/'.$this->live[$matchid]['emblem2'];?>"/>
+                    <?php echo $this->escapeHtml($this->live[$matchid]['name2']);?>
                 </td>
                 <td align="center"><?php
-                    echo $this->escapeHtml($m->team1goals);
+                    echo $this->escapeHtml($this->live[$matchid]['goals1']);
                     echo ' : ';
-                    echo $this->escapeHtml($m->team2goals);
+                    echo $this->escapeHtml($this->live[$matchid]['goals2']);
                     ?>
                 </td>
                 <td align="center"><?php
-                    echo $this->escapeHtml($m->team1tip);
+                    echo $this->escapeHtml($this->user['matches'][$matchid]['tip1']);
                     echo ' : ';
-                    echo $this->escapeHtml($m->team2tip);
+                    echo $this->escapeHtml($this->user['matches'][$matchid]['tip2']);
                     ?>
                 </td>
                 <td><?php
-                    if ($m->getPoints() > 0) echo $this->escapeHtml($m->getPoints());
+                    if ($this->user['matches'][$matchid]['points'] > 0) echo $this->escapeHtml($this->user['matches'][$matchid]['points']);
                     ?>
                 </td>
                 <td style="color:#A4A4A4"><?php
-                    if ($m->getToddde() > 0) echo $this->escapeHtml($m->getToddde());
+                    if ($this->user['matches'][$matchid]['toddde'] > 0) echo $this->escapeHtml($this->user['matches'][$matchid]['toddde']);
                     ?>
                 </td>
             </tr>
         <?php endforeach; ?>
     </table>
+    <div id="hc_container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+
 </section>

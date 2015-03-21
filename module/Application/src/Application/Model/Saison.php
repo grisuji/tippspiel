@@ -7,6 +7,7 @@
  */
 
 namespace Application\Model;
+use DateTime;
 
 
 use Application\Model\UserData;
@@ -87,14 +88,19 @@ class Saison {
             $d = $u->days[$day];
             /* @var $d  \Application\Model\UserDay */
             if (isset($d)) {
+                $now = new DateTime();
                 foreach ($d->getMatches() as $m) {
                     /* @var $m  \Application\Model\Match */
                     if (isset($result[$m->id])) continue;
                     array_push($result['matches'], $m->id);
                     $result[$m->id] = array();
+                    $result[$m->id]['start'] = $m->start;
+                    $result[$m->id]['name1'] = $m->team1name;
+                    $result[$m->id]['name2'] = $m->team2name;
                     $result[$m->id]['emblem1'] = $m->team1emblem;
                     $result[$m->id]['emblem2'] = $m->team2emblem;
-                    if ($m->team1goals >= 0) { # only set, when match started
+                    $start = new DateTime($m->start);
+                    if ($now->getTimestamp() >= $start->getTimestamp()) { # only set, when match started
                         $result[$m->id]['goals1'] = $m->team1goals;
                         $result[$m->id]['goals2'] = $m->team2goals;
                         $result[$m->id]['finished'] = $m->isfinished;
@@ -157,6 +163,49 @@ class Saison {
                 'data' => $data
                 );
             $result[] = $new_user;
+        }
+        return $result;
+    }
+
+    public function getHighChartTipPoints($maxday) {
+        $result = array();
+        foreach ($this->users as $u ) {
+            /* @var $u  \Application\Model\UserData */
+            $data = array();
+            foreach ($u->days as $d) {
+                /* @var $d  \Application\Model\UserDay */
+                $day = $d->day;
+                if ($day > $maxday) continue;
+                $matches = $d->getMatches();
+                $pointmatrix = array(array());
+                $matchmatrix = array(array());
+                for ($i=0;$i<=6;$i++){
+                    for ($j=0;$j<=6;$j++){
+                        $pointmatrix[$i][$j] = 0;
+                        $matchmatrix[$i][$j] = 0;
+                    }
+                }
+                foreach ($matches as $m) {
+                    /* @var $m \Application\Model\Match */
+                    if ($m->team1goals === "" or $m->team2goals === "" or $m->team1tip === "" or $m->team2tip === "") continue;
+                    $tip1=min(intval($m->team1tip), 6);
+                    $tip2=min(intval($m->team2tip), 6);
+                    $pointmatrix[$tip1][$tip2] += ($m->getPoints()-8);
+                    $matchmatrix[$tip1][$tip2]++;
+                }
+                $data=array();
+                for ($i=0;$i<=6;$i++){
+                    for ($j=0;$j<=6;$j++){
+                        #$data[] = array("x" => $i, "y" => $j, "z" => $pointmatrix[$i][$j],$matchmatrix[$i][$j]);
+                        $data[] = array( $i, $j, $pointmatrix[$i][$j]);
+                    }
+                }
+            }
+            $new_user = array(
+                'name' => $u->name,
+                'data' => $data
+            );
+            $result[$u->id] = $new_user;
         }
         return $result;
     }
