@@ -81,8 +81,8 @@ class UserpointsController extends AbstractActionController{
         if (empty($day)) {
             $day = $matchTable->getDayOfNextMatch();
         }
-#        $matches = $matchTable->getUserMatchesByDay($userid, $day);
-        $matches = $matchTable->getSaisonTipsAndMatches(2014);
+        $matches_live = $matchTable->getUserMatchesByDay($userid, $day);
+        $matches_stats = $matchTable->getSaisonTipsAndMatches(2014);
         $userTable = $this->getServiceLocator()->get('UserTable');
         $userinfo = $userTable->getUser($userid);
         $users = $userTable->fetchAll();
@@ -96,7 +96,19 @@ class UserpointsController extends AbstractActionController{
 
         $saison = new Saison();
         $now = new DateTime();
-        foreach ($matches as $m) {
+
+        #for the livedata
+        foreach ($matches_live as $m) {
+            $start = new DateTime($m->start);
+            if ($now->getTimestamp() <= $start->getTimestamp() and $userid != $logged_in_id) {
+                $m->team1tip = "";
+                $m->team2tip = "";
+            }
+            $m->setPoints();
+        }
+
+        # for the statistic
+        foreach ($matches_stats as $m) {
             if ($m->userid < 2) continue;
             if ($m->userid != $userid) continue;
             # hide all future tips
@@ -112,18 +124,18 @@ class UserpointsController extends AbstractActionController{
 
         $live = $saison->getMatchDataByDay($day);
         $user = $saison->getUserDataByDay($day)[$userid];
-        $missing_point_data = $saison->getHighChartTipPoints($day)[$userid]["data"];
-        $won_point_data = $saison->getHighChartResultPoints($day)[$userid]["data"];
-
         #Debug::dump(json_encode($missing_point_data));
         #Debug::dump(json_encode($won_point_data));
         #Debug::dump($user);
-        $viewModel = new viewModel(array('live' => $live
+        $viewModel = new viewModel(array('live' => $matches_live
             , 'user' => $user
             , 'form' => $form
             , 'userinfo' => $userinfo
-            , 'hc_tipdata' => json_encode($missing_point_data)
-            , 'hc_resdata' => json_encode($won_point_data)
+            , 'hc_tip_won_data' => json_encode($saison->getHighChartTipPoints($day,true)[$userid]["data"])
+            , 'hc_tip_lost_data' => json_encode($saison->getHighChartTipPoints($day,false)[$userid]["data"])
+            , 'hc_res_won_data' => json_encode($saison->getHighChartResultPoints($day,true)[$userid]["data"])
+            , 'hc_res_lost_data' => json_encode($saison->getHighChartResultPoints($day,false)[$userid]["data"])
+
         ));
         return $viewModel;
 

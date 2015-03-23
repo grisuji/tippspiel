@@ -167,7 +167,7 @@ class Saison {
         return $result;
     }
 
-    public function getHighChartTipPoints($maxday) {
+    public function getHighChartTipPoints($maxday, $wonpoint=true) {
         $result = array();
         foreach ($this->users as $u ) {
             /* @var $u  \Application\Model\UserData */
@@ -190,7 +190,12 @@ class Saison {
                     if ($m->team1goals === "" or $m->team2goals === "" or $m->team1tip === "" or $m->team2tip === "") continue;
                     $tip1=min(intval($m->team1tip), 6);
                     $tip2=min(intval($m->team2tip), 6);
-                    $pointmatrix[$tip1][$tip2] += (8-$m->getPoints());
+                    if ($wonpoint){
+                        $pointmatrix[$tip1][$tip2] += $m->getPoints();
+                    } else {
+                        $pointmatrix[$tip1][$tip2] += (8-$m->getPoints());
+                    }
+
                     $matchmatrix[$tip1][$tip2]++;
                 }
             }
@@ -211,7 +216,7 @@ class Saison {
         return $result;
     }
 
-    public function getHighChartResultPoints($maxday) {
+    public function getHighChartResultPoints($maxday, $wonpoint) {
         $result = array();
         foreach ($this->users as $u ) {
             /* @var $u  \Application\Model\UserData */
@@ -234,7 +239,11 @@ class Saison {
                     if ($m->team1goals === "" or $m->team2goals === "" or $m->team1tip === "" or $m->team2tip === "") continue;
                     $result1=min(intval($m->team1goals), 6);
                     $result2=min(intval($m->team2goals), 6);
-                    $pointmatrix[$result1][$result2] += $m->getPoints();
+                    if ($wonpoint){
+                        $pointmatrix[$result1][$result2] += $m->getPoints();
+                    } else {
+                        $pointmatrix[$result1][$result2] += (8-$m->getPoints());
+                    }
                     $matchmatrix[$result1][$result2]++;
                 }
             }
