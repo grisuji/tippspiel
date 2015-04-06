@@ -11,6 +11,8 @@ use Application\Model\Saison;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use DateTime;
+use Zend\Json\Expr;
+use Zend\Json\Json;
 use Zend\Debug\Debug;
 
 
@@ -68,17 +70,86 @@ class RankController  extends AbstractActionController{
         #Debug::dump($saison->getDays($day));
         #Debug::dump("---");
         #Debug::dump($saison->getHighchartUserRanks($day));
-        $hc_yaxis_data = json_encode($saison->getHighchartUserRanks($day));
-        $hc_xaxis_data = json_encode($saison->getDays($day));
+        $hc_yaxis_data = $saison->getHighchartUserRanks($day);
+        $hc_xaxis_data = $saison->getDays($day);
+        $data = $this->getHighChartLine("2014", $hc_xaxis_data, $hc_yaxis_data);
+        $diagram = Json::encode($data, false, array('enableJsonExprFinder' => true));
         $view = new ViewModel(
             array(
                 'user'=>$user,
                 'day'=>$day,
                 'live'=>$live,
-                'hc_yaxis_data'=>$hc_yaxis_data,
-                'hc_xaxis_data'=>$hc_xaxis_data
+                'diagram'=>$diagram
             ));
 
         return $view;
     }
+
+    private function getHighChartLine($saison, $xdata, $ydata){
+        $linechart = array();
+        $linechart['chart'] = array(
+            'type' => 'line',
+            'zoomType' => "x"
+        );
+        $linechart["title"] = array(
+            'text' => "Platzierungen pro Spieltag",
+            'x' => -20
+        );
+        $linechart["subtitle"] = array(
+            'text' => "Saison " . $saison,
+            'x' => -20
+        );
+        $linechart["xAxis"] = array(
+            'categories' => $xdata
+        );
+        $linechart["yAxis"] = array(
+            'title' => array(
+                'text' => "Platzierung"
+            ),
+            'type' => 'linear',
+            'reversed' => true,
+            'plotlines' => array(array(
+                'value' => 0,
+                'width' => 1,
+                'color' => "#808080"
+            ))
+        );
+        $linechart["plotOptions"] = array(
+            'column' => array(
+                #'stacking' => "percent",
+                'stacking' => "normal",
+                'pointPadding' => 0.2,
+                'borderWidth' => 0
+            )
+        );
+        $linechart["tooltip"] = array(
+            'valueSuffix' => ' Punkte',
+            'formatter' => new Expr('function () { return "<b>" + this.series.name + "</b><br/>Platz: "+ this.y +"<br/>Punkte: " + this.point.z;}')
+        );
+        $linechart["legend"] = array(
+            'layout' => "horizontal",
+            'align' => "center",
+            'verticalAlign' => "bottom",
+            'borderWidth' => 0
+        );
+        $linechart["series"] = $ydata;
+#        Debug::dump(json_encode($linechart));
+        return $linechart;
+    }
+
 }
+
+/*
+ *
+   {
+     "chart":{"type":"line","zoomType":"x"},
+     "title":{"text":"Der Platzierungsverlauf während der Saison","x":-20},
+     "subtitle":{"text":"Saison 2014","x":-20},
+     "xAxis":{"categories":'.$this->hc_xaxis_data.'},
+     "yAxis":{"reversed":true,"title":{"text":"Platzierungen"},"type":"linear","plotlines":[{"value":0,"width":1,"color":"#808080"}]},
+     "tooltip":{"valueSuffix":". Platz"},
+     "legend":{"layout":"horizontal","align":"center","verticalAlign":"bottom","borderWidth":0},
+     tooltip:{formatter: function () { return this.series.name + "<br/>Spieltag: "+ this.x +"<br/>Platz: "+ this.y +"<br/>Punkte: " + this.point.z;}},
+     "series":'.$this->hc_yaxis_data.'
+    }
+ */

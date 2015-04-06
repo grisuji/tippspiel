@@ -1,15 +1,7 @@
 <?php $this->headScript()
     ->appendFile($this->basePath().'/js/highcharts.js', 'text/javascript')
     ->appendScript('$(function () {$("#hc_container").highcharts(
-    {
-     "chart":{"type":"line","zoomType":"x"},
-     "title":{"text":"Der Platzierungsverlauf während der Saison","x":-20},
-     "subtitle":{"text":"Saison 2014","x":-20},
-     "xAxis":{"categories":'.$this->hc_xaxis_data.'},
-     "yAxis":{"reversed":true,"title":{"text":"Platzierungen"},"type":"linear","plotlines":[{"value":0,"width":1,"color":"#808080"}]},"tooltip":{"valueSuffix":". Platz"},"legend":{"layout":"horizontal","align":"center","verticalAlign":"bottom","borderWidth":0},
-     tooltip:{formatter: function () { return this.series.name + "<br/>Spieltag: "+ this.x +"<br/>Platz: "+ this.y +"<br/>Punkte: " + this.point.z;}},
-     "series":'.$this->hc_yaxis_data.'
-    }
+        '.$this->diagram.'
     )});');
 echo $this->headScript();
 ?>
