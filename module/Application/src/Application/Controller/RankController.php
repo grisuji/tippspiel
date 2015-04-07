@@ -42,7 +42,6 @@ class RankController  extends AbstractActionController{
         /* @var $u \Users\Model\User */
         /* @var $userTable \Users\Model\UserTable  */
 
-
         $matchTable = $this->getServiceLocator()->get('MatchTable');
         $day = $matchTable->getDayOfNextMatch();
         $matches = $matchTable->getSaisonTipsAndMatches(2014);

@@ -53,7 +53,7 @@ class MatchTable {
      * @throws Exception
      * @return array|\ArrayObject|null
      */
-    public function getUserMatchesByDay($userid, $day)
+    public function getUserMatchesByDay($saison, $userid, $day)
     {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(array('id', 'league', 'saison', 'date_time', 'groupid', 'team1goals', 'team2goals', 'isfinished' ));
@@ -63,6 +63,8 @@ class MatchTable {
         $select->join('tips', $expression, array('tipid'=>'id', 'userid', 'team1tip', 'team2tip'), $select::JOIN_LEFT);
         $where = new Where();
         $where->equalTo('groupid',(int) $day)
+            ->AND
+            ->equalTo('saison',(int) $saison)
             ->AND
             ->NEST
             ->equalTo('userid', (int) $userid)
