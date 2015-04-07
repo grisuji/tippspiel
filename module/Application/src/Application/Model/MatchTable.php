@@ -64,7 +64,7 @@ class MatchTable {
         $where = new Where();
         $where->equalTo('groupid',(int) $day)
             ->AND
-            ->equalTo('saison',(int) $saison)
+            ->equalTo('saison', $saison)
             ->AND
             ->NEST
             ->equalTo('userid', (int) $userid)
