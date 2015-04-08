@@ -13,6 +13,10 @@ use DateTime;
 use Application\Model\UserData;
 use Zend\Debug\Debug;
 
+/**
+ * Class Saison
+ * @package Application\Model
+ */
 class Saison {
     public $users = array();
     public $days = array();
@@ -251,6 +255,65 @@ class Saison {
             for ($i=0;$i<=6;$i++){
                 for ($j=0;$j<=6;$j++){
                     #$data[] = array("x" => $i, "y" => $j, "z" => $pointmatrix[$i][$j],$matchmatrix[$i][$j]);
+                    $data[] = array( $i, $j, $pointmatrix[$i][$j]);
+                }
+            }
+
+            $new_user = array(
+                'name' => $u->name,
+                'data' => $data
+            );
+            $result[$u->id] = $new_user;
+        }
+        return $result;
+    }
+
+    /**
+     * @param $maxday  count the statistic from day 1 to maxday
+     * @param $count_positiv if we want to count the won or lost points
+     * @param $count_tips if we want to count by tips or results
+     * @return array a matrix of results/tips
+     */
+    public function getPointMatrix($maxday, $count_positiv, $count_tips) {
+        $result = array();
+        foreach ($this->users as $u ) {
+            /* @var $u  \Application\Model\UserData */
+            $pointmatrix = array(array());
+            $matchmatrix = array(array());
+
+            for ($i=0;$i<=6;$i++){
+                for ($j=0;$j<=6;$j++){
+                    $pointmatrix[$i][$j] = 0;
+                    $matchmatrix[$i][$j] = 0;
+                }
+            }
+            foreach ($u->days as $d) {
+                /* @var $d  \Application\Model\UserDay */
+                $day = $d->day;
+                if ($day > $maxday) continue;
+                $matches = $d->getMatches();
+                foreach ($matches as $m) {
+                    /* @var $m \Application\Model\Match */
+                    if ($m->team1goals === "" or $m->team2goals === "" or $m->team1tip === "" or $m->team2tip === "") continue;
+                    if ($count_tips) {
+                        $result1 = min(intval($m->team1tip), 6);
+                        $result2 = min(intval($m->team2tip), 6);
+                    } else {
+                        $result1 = min(intval($m->team1goals), 6);
+                        $result2 = min(intval($m->team2goals), 6);
+                    }
+                    if ($count_positiv){
+                        $pointmatrix[$result1][$result2] += $m->getPoints();
+                    } else {
+                        $pointmatrix[$result1][$result2] += (8-$m->getPoints());
+                    }
+                    $matchmatrix[$result1][$result2]++;
+                }
+            }
+            $data=array();
+            for ($i=0;$i<=6;$i++){
+                for ($j=0;$j<=6;$j++){
+                    #$data[] = array("x" => $i, "y" => $j, "z" => $pointmatrix[$i][$j]);
                     $data[] = array( $i, $j, $pointmatrix[$i][$j]);
                 }
             }

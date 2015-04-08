@@ -2,89 +2,18 @@
     ->appendFile($this->basePath().'/js/highcharts.js', 'text/javascript')
     ->appendFile('http://code.highcharts.com/modules/heatmap.js', 'text/javascript')
     ->appendScript('$(function () {$("#hc_tip_won_container").highcharts(
-    {
-    "chart": {        type: "heatmap",        marginTop: 40,        marginBottom: 80        },
-    title: {        text: "Gewonnene Punkte bei Tipps"        },
-    xAxis: {        categories: ["0", "1", "2", "3", "4", "5", ">5"]    },
-    yAxis: {        categories: ["0", "1", "2", "3", "4", "5", ">5"],        title: null    },
-    colorAxis: {        min: 0,        minColor: "#FFFFFF",        maxColor: "#00FF00", gridLineColor:  "#FF0000"   },
-    legend: {        align: "right",        layout: "vertical",        margin: 0,        verticalAlign: "top",        y: 25,        symbolHeight: 280    },
-    tooltip:{formatter: function () { return "Bei <b>"+ this.point.x +":"+ this.point.y +"</b> Tipps <br/>gingen " + this.point.value + " Punkte<br/>verloren." ;}},
-    series: [{
-        name: "Gewonnene Punkte bei Tipp",
-        borderWidth: 1,
-        data: '.$this->hc_tip_won_data.',
-        dataLabels: {
-                enabled: true,
-                color: "#000000"
-                }
-        }]
-        });
-    });'
+        '.$this->hc_tip_won_diagram.');});'
     )
     ->appendScript('$(function () {$("#hc_tip_lost_container").highcharts(
-    {
-    "chart": {        type: "heatmap",        marginTop: 40,        marginBottom: 80        },
-    title: {        text: "verlorene Punkte bei Tipps"        },
-    xAxis: {        categories: ["0", "1", "2", "3", "4", "5", ">5"]    },
-    yAxis: {        categories: ["0", "1", "2", "3", "4", "5", ">5"],        title: null    },
-    colorAxis: {        min: 0,        minColor: "#FFFFFF",        maxColor: "#FF0000", gridLineColor:  "#FF0000"   },
-    legend: {        align: "right",        layout: "vertical",        margin: 0,        verticalAlign: "top",        y: 25,        symbolHeight: 280    },
-    tooltip:{formatter: function () { return "Bei <b>"+ this.point.x +":"+ this.point.y +"</b> Tipps <br/>gingen " + this.point.value + " Punkte<br/>verloren." ;}},
-    series: [{
-        name: "Verlorene Punkte bei Tipp",
-        borderWidth: 1,
-        data: '.$this->hc_tip_lost_data.',
-        dataLabels: {
-                enabled: true,
-                color: "#000000"
-                }
-        }]
-        });
-    });'
+        '.$this->hc_tip_lost_diagram.');});'
     )
     ->appendScript('$(function () {$("#hc_res_won_container").highcharts(
-    {
-    "chart": {        type: "heatmap",        marginTop: 40,        marginBottom: 80        },
-    title: {        text: "gewonnene Punkte bei Ergebissen"        },
-    xAxis: {        categories: ["0", "1", "2", "3", "4", "5", ">5"]    },
-    yAxis: {        categories: ["0", "1", "2", "3", "4", "5", ">5"],        title: null    },
-    colorAxis: {        min: 0,        minColor: "#FFFFFF",        maxColor: "#00FF00"    },
-    legend: {        align: "right",        layout: "vertical",        margin: 0,        verticalAlign: "top",        y: 25,        symbolHeight: 280    },
-    tooltip:{formatter: function () { return "Bei <b>"+ this.point.x +":"+ this.point.y +"</b> Ergebnissen <br/>wurden " + this.point.value + " Punkte<br/>gewonnen." ;}},
-    series: [{
-        name: "gewonnene Punkte bei Egebnissen",
-        borderWidth: 1,
-        data: '.$this->hc_res_won_data.',
-        dataLabels: {
-                enabled: true,
-                color: "#000000"
-                }
-        }]
-        });
-    });'
+        '.$this->hc_res_won_diagram.');});'
     )
     ->appendScript('$(function () {$("#hc_res_lost_container").highcharts(
-    {
-    "chart": {        type: "heatmap",        marginTop: 40,        marginBottom: 80        },
-    title: {        text: "verlorene Punkte bei Ergebissen"        },
-    xAxis: {        categories: ["0", "1", "2", "3", "4", "5", ">5"]    },
-    yAxis: {        categories: ["0", "1", "2", "3", "4", "5", ">5"],        title: null    },
-    colorAxis: {        min: 0,        minColor: "#FFFFFF",        maxColor: "#FF0000"    },
-    legend: {        align: "right",        layout: "vertical",        margin: 0,        verticalAlign: "top",        y: 25,        symbolHeight: 280    },
-    tooltip:{formatter: function () { return "Bei <b>"+ this.point.x +":"+ this.point.y +"</b> Ergebnissen <br/>wurden " + this.point.value + " Punkte<br/>gewonnen." ;}},
-    series: [{
-        name: "Verlorene Punkte bei Ergebnissen",
-        borderWidth: 1,
-        data: '.$this->hc_res_lost_data.',
-        dataLabels: {
-                enabled: true,
-                color: "#000000"
-                }
-        }]
-        });
-    });'
-    );
+        '.$this->hc_res_lost_diagram.');});'
+    )
+;
 echo $this->headScript();
 ?>
 
@@ -172,11 +101,11 @@ echo $this->headScript();
             </tr>
         <?php endforeach; ?>
     </table>
-    <div>
-        <div id="hc_tip_won_container"  style="width: 400px;float: left; height: 400px; margin: 0 auto"></div>
+    <div style="width: 800px; height: 400px;">
+        <div id="hc_tip_won_container" style="width: 400px;float: left; height: 400px; margin: 0 auto"></div>
         <div id="hc_tip_lost_container" style="width: 400px; height: 400px; margin: 0 auto"></div>
     </div>
-    <div>
+    <div style="width: 800px; height: 400px;">
         <div id="hc_res_won_container"  style="width: 400px;float: left; height: 400px; margin: 0 auto"></div>
         <div id="hc_res_lost_container" style="width: 400px; height: 400px; margin: 0 auto"></div>
     </div>

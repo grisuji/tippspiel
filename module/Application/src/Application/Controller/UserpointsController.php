@@ -13,6 +13,8 @@ use Zend\Debug\Debug;
 use Zend\Mvc\Controller\AbstractActionController;
 use Application\Model\Saison;
 use Zend\View\Model\ViewModel;
+use Zend\Json\Expr;
+use Zend\Json\Json;
 use DateTime;
 
 class UserpointsController extends AbstractActionController{
@@ -127,19 +129,91 @@ class UserpointsController extends AbstractActionController{
         #Debug::dump(json_encode($missing_point_data));
         #Debug::dump(json_encode($won_point_data));
         #Debug::dump($user);
+        $wonbytips = $this->getHighChartPointMatrix($saison->getPointMatrix($day, true, true)[$userid]["data"], "Gewonnene Punkte über Tipps");
+        $lostbytips = $this->getHighChartPointMatrix($saison->getPointMatrix($day, false, true)[$userid]["data"], "Verlorene Punkte über Tipps", "#FF0000");
+        $wonbyresult = $this->getHighChartPointMatrix($saison->getPointMatrix($day, true, false)[$userid]["data"], "Gewonnene Punkte über Ergebnisse");
+        $lostbyresult = $this->getHighChartPointMatrix($saison->getPointMatrix($day, false, false)[$userid]["data"], "Verlorene Punkte über Ergebnisse", "#FF0000");
         $viewModel = new viewModel(array('live' => $matches_live
             , 'user' => $user
             , 'form' => $form
             , 'userinfo' => $userinfo
-            , 'hc_tip_won_data' => json_encode($saison->getHighChartTipPoints($day,true)[$userid]["data"])
-            , 'hc_tip_lost_data' => json_encode($saison->getHighChartTipPoints($day,false)[$userid]["data"])
-            , 'hc_res_won_data' => json_encode($saison->getHighChartResultPoints($day,true)[$userid]["data"])
-            , 'hc_res_lost_data' => json_encode($saison->getHighChartResultPoints($day,false)[$userid]["data"])
+            , 'hc_tip_won_diagram' => Json::encode($wonbytips, false, array('enableJsonExprFinder' => true))
+            , 'hc_tip_lost_diagram' => Json::encode($lostbytips, false, array('enableJsonExprFinder' => true))
+            , 'hc_res_won_diagram' => Json::encode($wonbyresult, false, array('enableJsonExprFinder' => true))
+            , 'hc_res_lost_diagram' => Json::encode($lostbyresult, false, array('enableJsonExprFinder' => true))
 
         ));
         return $viewModel;
 
     }
 
+    private function getHighChartPointMatrix($matrix, $title, $color="#00FF00"){
+        $linechart = array();
+        $linechart['chart'] = array(
+            'type' => 'heatmap',
+            'marginTop' => 40,
+            'marginBottom' => 40,
+            'inverted' => true
+        );
+        $linechart['title'] = array(
+            'text' => $title
+        );
+        $linechart['xAxis'] = array(
+            'categories' => array("0", "1", "2", "3", "4", "5", ">5")
+        );
+        $linechart['yAxis'] = array(
+            'categories' => array("0", "1", "2", "3", "4", "5", ">5")
+        );
+        $linechart['colorAxis'] = array(
+            'min' => 0,
+            'minColor' => "#FFFFFF",
+            'maxColor' => $color
+        );
+        $linechart['legend'] = array(
+            'align' => "right",
+            'layout' => "vertical",
+            'margin' => 0,
+            'verticalAlign' => "top",
+            'y' => 25,
+            'symbolHeight' => 280
+        );
+        $linechart["tooltip"] = array(
+            'formatter' => new Expr('function () { return "Bei <b>"+ this.point.x +":"+ this.point.y +"</b><br/>waren es " + this.point.value + " Punkte." ;}')
+        );
+        $linechart['series'] = array(
+            array(
+                'name' => $title,
+                'borderWidth' => 1,
+                'data' => $matrix,
+                'dataLabels' => array(
+                    'enabled' => true,
+                    'color' => '#000000'
+                )
+            )
+        );
+        return $linechart;
+    }
+
 
 }
+
+/*
+ * {
+    "chart": {        type: "heatmap",        marginTop: 40,        marginBottom: 80        },
+    title: {        text: "Gewonnene Punkte bei Tipps"        },
+    xAxis: {        categories: ["0", "1", "2", "3", "4", "5", ">5"]    },
+    yAxis: {        categories: ["0", "1", "2", "3", "4", "5", ">5"],        title: null    },
+    colorAxis: {        min: 0,        minColor: "#FFFFFF",        maxColor: "#00FF00", gridLineColor:  "#FF0000"   },
+    legend: {        align: "right",        layout: "vertical",        margin: 0,        verticalAlign: "top",        y: 25,        symbolHeight: 280    },
+    tooltip:{formatter: function () { return "Bei <b>"+ this.point.x +":"+ this.point.y +"</b> Tipps <br/>gingen " + this.point.value + " Punkte<br/>verloren." ;}},
+    series: [{
+        name: "Gewonnene Punkte bei Tipp",
+        borderWidth: 1,
+        data: '.$this->hc_tip_won_data.',
+        dataLabels: {
+                enabled: true,
+                color: "#000000"
+                }
+        }]
+        }
+ */
