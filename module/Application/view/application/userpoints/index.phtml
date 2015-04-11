@@ -1,17 +1,29 @@
 <?php $this->headScript()
     ->appendFile($this->basePath().'/js/highcharts.js', 'text/javascript')
     ->appendFile('http://code.highcharts.com/modules/heatmap.js', 'text/javascript')
-    ->appendScript('$(function () {$("#hc_tip_won_container").highcharts(
-        '.$this->hc_tip_won_diagram.');});'
-    )
-    ->appendScript('$(function () {$("#hc_tip_lost_container").highcharts(
-        '.$this->hc_tip_lost_diagram.');});'
-    )
-    ->appendScript('$(function () {$("#hc_res_won_container").highcharts(
-        '.$this->hc_res_won_diagram.');});'
-    )
-    ->appendScript('$(function () {$("#hc_res_lost_container").highcharts(
-        '.$this->hc_res_lost_diagram.');});'
+    ->appendScript(
+        '$(function() {
+            var chart = new Highcharts.Chart('.$this->hc_tip_won_diagram.');
+                $("#select").on("change", function(){
+                    var selVal = $("#select").val();
+                    var dia = '.$this->hc_tip_won_diagram.';
+                    if(selVal == "hc_tip_won" || selVal == "")
+                    {
+                        dia = '.$this->hc_tip_won_diagram.';
+                    } else if(selVal == "hc_tip_lost")
+                    {
+                        dia = '.$this->hc_tip_lost_diagram.';
+                    } else if(selVal == "hc_res_won")
+                    {
+                        dia = '.$this->hc_res_won_diagram.';
+                    } else if(selVal == "hc_res_lost")
+                    {
+                        dia = '.$this->hc_res_lost_diagram.';
+                    }
+                    var chart = new Highcharts.Chart(dia);
+                });
+            });
+        '
     )
 ;
 echo $this->headScript();
@@ -101,13 +113,15 @@ echo $this->headScript();
             </tr>
         <?php endforeach; ?>
     </table>
-    <div style="width: 800px; height: 400px;">
-        <div id="hc_tip_won_container" style="width: 400px;float: left; height: 400px; margin: 0 auto"></div>
-        <div id="hc_tip_lost_container" style="width: 400px; height: 400px; margin: 0 auto"></div>
-    </div>
-    <div style="width: 800px; height: 400px;">
-        <div id="hc_res_won_container"  style="width: 400px;float: left; height: 400px; margin: 0 auto"></div>
-        <div id="hc_res_lost_container" style="width: 400px; height: 400px; margin: 0 auto"></div>
+    <form>
+        <select id="select">
+            <option selected="selected" value="hc_tip_won">Gewonnen über Tipps</option>
+            <option value="hc_tip_lost">Verloren über Tipps</option>
+            <option value="hc_res_won">Gewonnen über Ergebnisse</option>
+            <option value="hc_res_lost">Verloren über Ergebnisse</option>
+        </select>
+    </form>
+    <div  id="container"  style="height: 400px;">
     </div>
 
 </section>
