@@ -153,7 +153,8 @@ class UserpointsController extends AbstractActionController{
             'type' => 'heatmap',
             'marginTop' => 40,
             'marginBottom' => 40,
-            'inverted' => true
+            'inverted' => true,
+            'renderTo' => 'container'
         );
         $linechart['title'] = array(
             'text' => $title
