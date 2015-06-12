@@ -127,6 +127,31 @@ class MatchTable {
             return $match->day;
         }
 
+        return $this->getDayOfLastMatch();
+    }
+
+    /**
+     * checks the day of the last finished match.
+     * @return int
+     */
+    public function getDayOfLastMatch()
+    {
+        /* @var $match \Application\Model\Match  */
+        $select = $this->tableGateway->getSql()->select();
+        $select->columns(array('date_time', 'groupid', 'isfinished' ));
+        $select->where(array('isfinished' => 1));
+        $select->order('date_time DESC');
+        $select->limit(1);
+
+        $result = $this->tableGateway->selectWith($select);
+        $match = $result->current();
+        if ($match) {
+            $start = new DateTime($match->start);
+            $border = new DateTime();
+            $border->add(new DateInterval("P1D"));
+            return $match->day;
+        }
+
         return "1";
     }
 }

@@ -29,17 +29,20 @@ class UserData {
         }
         $d = $this->days[$match->day];
         if (!isset($d)) {
-            $d = new UserDay($match->day);
-            $this->days[$match->day] = $d;
+            $d = new UserDay(intval($match->day));
+            $this->days[intval($match->day)] = $d;
         }
         $d->addMatch($match);
     }
 
     public function setPoints(){
+        Debug::dump($this->name);
         $this->points = 0;
         $this->toddde = 0;
         foreach ($this->days as $d) {
             /* @var $d \Application\Model\UserDay  */
+            Debug::dump($d->day);
+
             $d->setPoints();
             $this->points += $d->getPoints();
             $d->setSaisonPoints($this->points);
@@ -123,10 +126,12 @@ class UserData {
     public function fillDummyDays($last){
         $first = reset($this->days);
         /* @var $first \Application\Model\UserDay  */
+        /* @var $last \Application\Model\UserDay  */
         for ($d = $first->day; $d <= $last; $d++) {
             if (!isset($this->days[$d])) {
                 $this->days[$d] = new UserDay($d);
             }
         }
+        ksort($this->days);
     }
 }
