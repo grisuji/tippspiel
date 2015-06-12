@@ -36,13 +36,10 @@ class UserData {
     }
 
     public function setPoints(){
-        Debug::dump($this->name);
         $this->points = 0;
         $this->toddde = 0;
         foreach ($this->days as $d) {
             /* @var $d \Application\Model\UserDay  */
-            Debug::dump($d->day);
-
             $d->setPoints();
             $this->points += $d->getPoints();
             $d->setSaisonPoints($this->points);
