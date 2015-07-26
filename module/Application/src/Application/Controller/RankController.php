@@ -71,7 +71,7 @@ class RankController  extends AbstractActionController{
         #Debug::dump($saison->getHighchartUserRanks($day));
         $hc_yaxis_data = $saison->getHighchartUserRanks($day);
         $hc_xaxis_data = $saison->getDays($day);
-        $data = $this->getHighChartLine("2014", $hc_xaxis_data, $hc_yaxis_data);
+        $data = $this->getHighChartLine("2015", $hc_xaxis_data, $hc_yaxis_data);
         $diagram = Json::encode($data, false, array('enableJsonExprFinder' => true));
         $view = new ViewModel(
             array(

@@ -56,7 +56,7 @@ class DeliverController extends AbstractActionController {
         if (is_null($this->day)) {
             $this->day = $matchTable->getDayOfNextMatch();
         }
-        $matches = $matchTable->getUserMatchesByDay("2014", $userid, $this->day);
+        $matches = $matchTable->getUserMatchesByDay("2015", $userid, $this->day);
         $tipTable = $this->getServiceLocator()->get('TipTable');
         $index = 0;
         $data = array();
