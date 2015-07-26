@@ -83,8 +83,8 @@ class UserpointsController extends AbstractActionController{
         if (empty($day)) {
             $day = $matchTable->getDayOfNextMatch();
         }
-        $matches_live = $matchTable->getUserMatchesByDay("2014", $userid, $day);
-        $matches_stats = $matchTable->getSaisonTipsAndMatches(2014);
+        $matches_live = $matchTable->getUserMatchesByDay("2015", $userid, $day);
+        $matches_stats = $matchTable->getSaisonTipsAndMatches(2015);
         $userTable = $this->getServiceLocator()->get('UserTable');
         $userinfo = $userTable->getUser($userid);
         $users = $userTable->fetchAll();
