@@ -9,9 +9,7 @@ echo $this->headScript();
     <h2>Spieltag  <?php echo $this->day ?></h2>
     <table class="table" >
         <tr>
-            <th></th>
-            <th></th>
-            <th></th>
+            <th colspan="3"><img src="<?php echo $this->basePath().'/img/grisuji_ball_hinten_2.png';?>"/></th>
             <?php foreach ($this->live['matches'] as $matchid) { ?>
                 <th <?php if($this->live[$matchid]['finished'] == 0): ?>
                     style="color:red"
