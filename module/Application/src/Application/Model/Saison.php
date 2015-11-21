@@ -139,9 +139,10 @@ class Saison {
     public function getDays($maxday=0){
         if ($maxday == 0) return $this->days;
         $result=array();
+        $result[] = 0; # adds a dummy value 4 highcharts
         foreach ($this->days as $day) {
             if ($day > $maxday) continue;
-            $result[] = $day;
+            $result[] = $day; # append day
         }
         return $result;
     }
@@ -151,6 +152,7 @@ class Saison {
         foreach ($this->users as $u ) {
             /* @var $u  \Application\Model\UserData */
             $data = array();
+            #$data[] = 0; # dummy-value, because highcharts array begins with the index 1
             foreach ($u->days as $d) {
                 $day = $d->day;
                 if ($day > $maxday) continue;
