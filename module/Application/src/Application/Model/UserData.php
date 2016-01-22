@@ -23,6 +23,15 @@ class UserData {
         $this->name = $match->username;
     }
 
+    public function isMatchSet($match)
+    {
+        $d = $this->days[$match->day];
+        if (!isset($d)) {
+            return false;
+        }
+        return $d->isMatchSet($match);
+    }
+
     public function addMatch($match){
         if (!isset($match->day)) {
             throw new \Exception("No day set in match");

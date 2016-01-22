@@ -24,6 +24,10 @@ class UserDay {
         $this->day = $day;
     }
 
+    public function isMatchSet($match) {
+        return isset($this->matches[$match->id]);
+    }
+
     public function addMatch($match) {
         $this->matches[$match->id] = $match;
     }

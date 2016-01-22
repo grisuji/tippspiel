@@ -61,6 +61,16 @@ class Saison {
     }
 
     /* @var $match  \Application\Model\Match */
+    public function isMatchSet($match){
+        $user = $this->users[$match->userid];
+        /* @var $user  \Application\Model\UserData */
+        if (!isset($user)) {
+            return false;
+        }
+        return $user->isMatchSet($match);
+    }
+
+    /* @var $match  \Application\Model\Match */
     public function addMatch($match){
         $user = $this->users[$match->userid];
         /* @var $user  \Application\Model\UserData */

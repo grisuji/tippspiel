@@ -45,19 +45,25 @@ class RankController  extends AbstractActionController{
         $matchTable = $this->getServiceLocator()->get('MatchTable');
         $day = $matchTable->getDayOfNextMatch();
         $matches = $matchTable->getSaisonTipsAndMatches(2015);
+        $toddde =  $matchTable->getSaisonTodddeTipsAndMatches(2015);
 
         $saison = new Saison();
         $now = new DateTime();
-        foreach($matches as $m) {
-            if ($m->userid < 2) continue;
-            # hide all future tips
-            $start = new DateTime($m->start);
-            if ($now->getTimestamp() <= $start->getTimestamp()) {
-                $m->team1tip = "-";
-                $m->team2tip = "-";
+        foreach(array($matches, $toddde) as $set){
+            foreach($set as $m) {
+                if ($m->userid < 2) continue;
+                if ($saison->isMatchSet($m)) continue;
+                # hide all future tips
+                $start = new DateTime($m->start);
+                if ($now->getTimestamp() <= $start->getTimestamp()) {
+                    $m->team1tip = "-";
+                    $m->team2tip = "-";
+                }
+                $saison->addMatch($m);
             }
-            $saison->addMatch($m);
         }
+
+
         $saison->fillMissingDays();
         $saison->setPoints();
         $saison->sortAllDays();
@@ -71,6 +77,9 @@ class RankController  extends AbstractActionController{
         #Debug::dump($saison->getHighchartUserRanks($day));
         $hc_yaxis_data = $saison->getHighchartUserRanks($day);
         $hc_xaxis_data = $saison->getDays($day);
+        #Debug::dump($hc_xaxis_data);
+        #Debug::dump($hc_yaxis_data);
+
         $data = $this->getHighChartLine("2015", $hc_xaxis_data, $hc_yaxis_data);
         $diagram = Json::encode($data, false, array('enableJsonExprFinder' => true));
         $view = new ViewModel(

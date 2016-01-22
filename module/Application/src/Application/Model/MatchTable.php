@@ -17,6 +17,7 @@ use DateTime;
 use DateInterval;
 use Exception;
 use Zend\Debug\Debug;
+use Zend\Ldap\Filter\AndFilter;
 
 
 class MatchTable {
@@ -83,16 +84,37 @@ class MatchTable {
     {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(array('id', 'league', 'saison', 'groupid', 'date_time', 'team1goals', 'team2goals', 'isfinished',  ));
-        $select->join('tips', 'matchid=matches.id', array('tipid'=>'id', 'userid', 'team1tip', 'team2tip'), 'left');
+        $select->join('tips', 'matchid=matches.id', array('tipid'=>'id', 'userid', 'team1tip', 'team2tip'), 'right');
+        $select->join(array('team1' => 'teams'), 'team1.id=matches.team1id', array('team1name' => 'longname', 'team1emblem' => 'emblem'), 'left');
+        $select->join(array('team2' => 'teams'), 'team2.id=matches.team2id', array('team2name' => 'longname', 'team2emblem' => 'emblem'),'left');
+        $select->join('user', 'user.id=tips.userid', array('username' => 'name'),'left');
+        $select->order('date_time ASC');
+        $where = new Where();
+        $where->equalTo('saison',(int) $saison);
+        $select->where($where);
+        //Debug::dump($select->getSqlString());
+        $resultset = $this->tableGateway->selectWith($select);
+        $rs = new ResultSet();
+        $rs->initialize($resultset);
+        $rs->buffer();
+        return $rs;
+    }
+
+    public function getSaisonTodddeTipsAndMatches($saison)
+    {
+        $select = $this->tableGateway->getSql()->select();
+        $select->columns(array('id', 'league', 'saison', 'groupid', 'date_time', 'team1goals', 'team2goals', 'isfinished',  ));
+        $select->join(array('tips' => 'todddetips'), 'matchid=matches.id', array('tipid'=>'id', 'userid', 'team1tip', 'team2tip'), 'left');
         $select->join(array('team1' => 'teams'), 'team1.id=matches.team1id', array('team1name' => 'longname', 'team1emblem' => 'emblem'), 'left');
         $select->join(array('team2' => 'teams'), 'team2.id=matches.team2id', array('team2name' => 'longname', 'team2emblem' => 'emblem'),'left');
         $select->join('user', 'user.id=tips.userid', array('username' => 'name'),'left');
         $select->order('date_time ASC');
         $where = new Where();
         $where->equalTo('saison',(int) $saison)
-            ->AND
-            ->isNotNull('userid');
+              ->AND
+              ->isNotNull('userid');
         $select->where($where);
+        //Debug::dump($select->getSqlString());
         $resultset = $this->tableGateway->selectWith($select);
         $rs = new ResultSet();
         $rs->initialize($resultset);
