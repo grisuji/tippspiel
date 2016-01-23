@@ -28,6 +28,7 @@ class Match {
     public $username;
     public $team1tip;
     public $team2tip;
+    public $istodddetip = false;
 
     private $points = 0;
     private $toddde = 0;

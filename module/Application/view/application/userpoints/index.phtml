@@ -1,36 +1,3 @@
-<?php $this->headScript()
-    ->appendFile($this->basePath().'/js/highcharts.js', 'text/javascript')
-    ->appendFile('http://code.highcharts.com/modules/heatmap.js', 'text/javascript')
-    ->appendScript(
-        '$(function() {
-            var chart = new Highcharts.Chart('.$this->hc_tip_won_diagram.');
-                $("#select").on("change", function(){
-                    var selVal = $("#select").val();
-                    var dia = '.$this->hc_tip_won_diagram.';
-                    if(selVal == "hc_tip_won" || selVal == "")
-                    {
-                        dia = '.$this->hc_tip_won_diagram.';
-                    } else if(selVal == "hc_tip_lost")
-                    {
-                        dia = '.$this->hc_tip_lost_diagram.';
-                    } else if(selVal == "hc_res_won")
-                    {
-                        dia = '.$this->hc_res_won_diagram.';
-                    } else if(selVal == "hc_res_lost")
-                    {
-                        dia = '.$this->hc_res_lost_diagram.';
-                    }
-                    var chart = new Highcharts.Chart(dia);
-                });
-            });
-        '
-    )
-;
-echo $this->headScript();
-?>
-
-
-
 <section class="userpoints">
     <h1><?php echo $this->userinfo->name ?> </h1>
     <h4><?php echo $this->userinfo->motto ?> </h4>
@@ -96,7 +63,12 @@ echo $this->headScript();
                     echo $this->escapeHtml($m->team2goals);
                     ?>
                 </td>
-                <td align="center"><?php
+                <td align="center"<?php
+                    if ($m->istodddetip) {
+                        echo ' style="color:#A4A4A4">';
+                    } else {
+                        echo '>';
+                    }
                     echo $this->escapeHtml($m->team1tip);
                     echo ' : ';
                     echo $this->escapeHtml($m->team2tip);
@@ -113,14 +85,6 @@ echo $this->headScript();
             </tr>
         <?php endforeach; ?>
     </table>
-    <form>
-        <select id="select">
-            <option selected="selected" value="hc_tip_won">Gewonnen über Tipps</option>
-            <option value="hc_tip_lost">Verloren über Tipps</option>
-            <option value="hc_res_won">Gewonnen über Ergebnisse</option>
-            <option value="hc_res_lost">Verloren über Ergebnisse</option>
-        </select>
-    </form>
     <div  id="container"  style="height: 400px;">
     </div>
 

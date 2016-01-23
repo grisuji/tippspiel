@@ -44,8 +44,8 @@ class RankController  extends AbstractActionController{
 
         $matchTable = $this->getServiceLocator()->get('MatchTable');
         $day = $matchTable->getDayOfNextMatch();
-        $matches = $matchTable->getSaisonTipsAndMatches(2015);
-        $toddde =  $matchTable->getSaisonTodddeTipsAndMatches(2015);
+        $matches = $matchTable->getSaisonTipsAndMatches(2015, "tips");
+        $toddde =  $matchTable->getSaisonTipsAndMatches(2015, "todddetips");
 
         $saison = new Saison();
         $now = new DateTime();

@@ -54,14 +54,14 @@ class MatchTable {
      * @throws Exception
      * @return array|\ArrayObject|null
      */
-    public function getUserMatchesByDay($saison, $userid, $day)
+    public function getUserMatchesByDay($saison, $userid, $day, $sourcetable)
     {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(array('id', 'league', 'saison', 'date_time', 'groupid', 'team1goals', 'team2goals', 'isfinished' ));
         $select->join(array('team1' => 'teams'), 'team1.id=matches.team1id', array('team1name' => 'longname', 'team1emblem' => 'emblem'), 'left');
         $select->join(array('team2' => 'teams'), 'team2.id=matches.team2id', array('team2name' => 'longname', 'team2emblem' => 'emblem'),'left');
         $expression = new Expression('matchid=matches.id AND userid='.$userid);
-        $select->join('tips', $expression, array('tipid'=>'id', 'userid', 'team1tip', 'team2tip'), $select::JOIN_LEFT);
+        $select->join(array('tips' => $sourcetable), $expression, array('tipid'=>'id', 'userid', 'team1tip', 'team2tip'), $select::JOIN_LEFT);
         $where = new Where();
         $where->equalTo('groupid',(int) $day)
             ->AND
@@ -80,39 +80,17 @@ class MatchTable {
         return $rs;
     }
 
-    public function getSaisonTipsAndMatches($saison)
+    public function getSaisonTipsAndMatches($saison, $sourcetable)
     {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(array('id', 'league', 'saison', 'groupid', 'date_time', 'team1goals', 'team2goals', 'isfinished',  ));
-        $select->join('tips', 'matchid=matches.id', array('tipid'=>'id', 'userid', 'team1tip', 'team2tip'), 'right');
+        $select->join(array('tips' => $sourcetable), 'matchid=matches.id', array('tipid'=>'id', 'userid', 'team1tip', 'team2tip'), 'right');
         $select->join(array('team1' => 'teams'), 'team1.id=matches.team1id', array('team1name' => 'longname', 'team1emblem' => 'emblem'), 'left');
         $select->join(array('team2' => 'teams'), 'team2.id=matches.team2id', array('team2name' => 'longname', 'team2emblem' => 'emblem'),'left');
         $select->join('user', 'user.id=tips.userid', array('username' => 'name'),'left');
         $select->order('date_time ASC');
         $where = new Where();
         $where->equalTo('saison',(int) $saison);
-        $select->where($where);
-        //Debug::dump($select->getSqlString());
-        $resultset = $this->tableGateway->selectWith($select);
-        $rs = new ResultSet();
-        $rs->initialize($resultset);
-        $rs->buffer();
-        return $rs;
-    }
-
-    public function getSaisonTodddeTipsAndMatches($saison)
-    {
-        $select = $this->tableGateway->getSql()->select();
-        $select->columns(array('id', 'league', 'saison', 'groupid', 'date_time', 'team1goals', 'team2goals', 'isfinished',  ));
-        $select->join(array('tips' => 'todddetips'), 'matchid=matches.id', array('tipid'=>'id', 'userid', 'team1tip', 'team2tip'), 'left');
-        $select->join(array('team1' => 'teams'), 'team1.id=matches.team1id', array('team1name' => 'longname', 'team1emblem' => 'emblem'), 'left');
-        $select->join(array('team2' => 'teams'), 'team2.id=matches.team2id', array('team2name' => 'longname', 'team2emblem' => 'emblem'),'left');
-        $select->join('user', 'user.id=tips.userid', array('username' => 'name'),'left');
-        $select->order('date_time ASC');
-        $where = new Where();
-        $where->equalTo('saison',(int) $saison)
-              ->AND
-              ->isNotNull('userid');
         $select->where($where);
         //Debug::dump($select->getSqlString());
         $resultset = $this->tableGateway->selectWith($select);
