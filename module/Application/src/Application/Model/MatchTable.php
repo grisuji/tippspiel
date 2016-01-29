@@ -51,10 +51,11 @@ class MatchTable {
      * Get all matches + tips of an user at a given day in saison
      * @param integer $userid
      * @param integer $day
+     * @param string $sourcetable for tips (default=tips)
      * @throws Exception
      * @return array|\ArrayObject|null
      */
-    public function getUserMatchesByDay($saison, $userid, $day, $sourcetable)
+    public function getUserMatchesByDay($saison, $userid, $day, $sourcetable="tips")
     {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(array('id', 'league', 'saison', 'date_time', 'groupid', 'team1goals', 'team2goals', 'isfinished' ));
