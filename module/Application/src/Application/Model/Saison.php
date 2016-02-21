@@ -87,10 +87,10 @@ class Saison {
         $user->addMatch($match);
     }
 
-    public function setPoints() {
+    public function setPoints($full=true) {
         foreach ($this->users as $u) {
             /* @var $u  \Application\Model\UserData */
-            $u->setPoints();
+            $u->setPoints($full);
         }
     }
 
@@ -117,6 +117,8 @@ class Saison {
                     if ($now->getTimestamp() >= $start->getTimestamp()) { # only set, when match started
                         $result[$m->id]['goals1'] = $m->team1goals;
                         $result[$m->id]['goals2'] = $m->team2goals;
+                        $result[$m->id]['halfgoals1'] = $m->team1halfgoals;
+                        $result[$m->id]['halfgoals2'] = $m->team2halfgoals;
                         $result[$m->id]['finished'] = $m->isfinished;
                     }
                 }

@@ -37,7 +37,7 @@ class MatchTable {
     public function getMatchesByDay($day)
     {
         $select = $this->tableGateway->getSql()->select();
-        $select->columns(array('id', 'league', 'saison', 'date_time', 'groupdid', 'team1goals', 'team2goals', 'isfinished' ));
+        $select->columns(array('id', 'league', 'saison', 'date_time', 'groupdid', 'team1goals', 'team2goals', 'team1halfgoals', 'team2halfgoals', 'isfinished' ));
         $select->join(array('team1' => 'teams'), 'team1.id=matches.team1id',
                       array('team1name' => 'longname', 'team1emblem' => 'emblem'), 'left');
         $select->join(array('team2' => 'teams'), 'team2.id=matches.team2id',
@@ -58,7 +58,7 @@ class MatchTable {
     public function getUserMatchesByDay($saison, $userid, $day, $sourcetable="tips")
     {
         $select = $this->tableGateway->getSql()->select();
-        $select->columns(array('id', 'league', 'saison', 'date_time', 'groupid', 'team1goals', 'team2goals', 'isfinished' ));
+        $select->columns(array('id', 'league', 'saison', 'date_time', 'groupid', 'team1goals', 'team2goals', 'team1halfgoals', 'team2halfgoals', 'isfinished' ));
         $select->join(array('team1' => 'teams'), 'team1.id=matches.team1id', array('team1name' => 'longname', 'team1emblem' => 'emblem'), 'left');
         $select->join(array('team2' => 'teams'), 'team2.id=matches.team2id', array('team2name' => 'longname', 'team2emblem' => 'emblem'),'left');
         $expression = new Expression('matchid=matches.id AND userid='.$userid);
@@ -84,7 +84,7 @@ class MatchTable {
     public function getSaisonTipsAndMatches($saison, $sourcetable)
     {
         $select = $this->tableGateway->getSql()->select();
-        $select->columns(array('id', 'league', 'saison', 'groupid', 'date_time', 'team1goals', 'team2goals', 'isfinished',  ));
+        $select->columns(array('id', 'league', 'saison', 'groupid', 'date_time', 'team1goals', 'team2goals', 'team1halfgoals', 'team2halfgoals', 'isfinished',  ));
         $select->join(array('tips' => $sourcetable), 'matchid=matches.id', array('tipid'=>'id', 'userid', 'team1tip', 'team2tip'), 'right');
         $select->join(array('team1' => 'teams'), 'team1.id=matches.team1id', array('team1name' => 'longname', 'team1emblem' => 'emblem'), 'left');
         $select->join(array('team2' => 'teams'), 'team2.id=matches.team2id', array('team2name' => 'longname', 'team2emblem' => 'emblem'),'left');

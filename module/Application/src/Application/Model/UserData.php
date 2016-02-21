@@ -44,12 +44,12 @@ class UserData {
         $d->addMatch($match);
     }
 
-    public function setPoints(){
+    public function setPoints($full=true){
         $this->points = 0;
         $this->toddde = 0;
         foreach ($this->days as $d) {
             /* @var $d \Application\Model\UserDay  */
-            $d->setPoints();
+            $d->setPoints($full);
             $this->points += $d->getPoints();
             $d->setSaisonPoints($this->points);
             $this->toddde += $d->getToddde();

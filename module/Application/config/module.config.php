@@ -94,6 +94,20 @@ return array(
                             ),
                         ),
                     ),
+                    'waswenn' => array(
+                        'type'    => 'Segment',
+                        'may_terminate' => true,
+                        'options' => array(
+                            'route'    => '/waswenn/[:action]',
+                            'constraints' => array(
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\Waswenn',
+                                'action'     => 'index'
+                            ),
+                        ),
+                    ),
                     'default' => array(
                         'type'    => 'Segment',
                         'options' => array(
@@ -135,7 +149,8 @@ return array(
             'Application\Controller\Deliver' => 'Application\Controller\DeliverController',
             'Application\Controller\Userpoints' => 'Application\Controller\UserpointsController',
             'Application\Controller\Static' => 'Application\Controller\StaticController',
-            'Application\Controller\Rank' => 'Application\Controller\RankController'
+            'Application\Controller\Rank' => 'Application\Controller\RankController',
+            'Application\Controller\Waswenn' => 'Application\Controller\WaswennController'
         ),
     ),
     'view_manager' => array(

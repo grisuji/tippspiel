@@ -39,6 +39,7 @@
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li ><a href="<?php echo $this->url('application/rank') ?>"><?php echo $this->translate('Tabelle') ?></a></li>
+                        <li ><a href="<?php echo $this->url('application/waswenn') ?>"><?php echo $this->translate('Was wäre wenn?') ?></a></li>
                         <li ><a href="<?php echo $this->url('application/userpoints') ?>"><?php echo $this->translate('Einzelpunkte') ?></a></li>
                         <?php if ($user = $this->identity() and $user->name == "admin") { ?>
                             <li ><a href="<?php echo $this->url('users/user-manager') ?>"><?php echo $this->translate('Manage Users') ?></a></li>

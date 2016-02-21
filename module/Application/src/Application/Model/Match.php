@@ -9,6 +9,7 @@
 namespace Application\Model;
 use Application\Rules\GrisujiPoints;
 use Application\Rules\ToddePoints;
+use Zend\Debug\Debug;
 
 
 class Match {
@@ -19,6 +20,8 @@ class Match {
     public $team2name;
     public $team1goals;
     public $team2goals;
+    public $team1halfgoals;
+    public $team2halfgoals;
     public $team1emblem;
     public $team2emblem;
     public $isfinished;
@@ -40,6 +43,8 @@ class Match {
         $this->team2name = (isset($data['team2name'])) ? $data['team2name'] : null;
         $this->team1goals = (isset($data['team1goals']) and $data['team1goals']>=0) ? $data['team1goals'] : "";
         $this->team2goals = (isset($data['team2goals']) and $data['team2goals']>=0) ? $data['team2goals'] : "";
+        $this->team1halfgoals = (isset($data['team1halfgoals']) and $data['team1halfgoals']>=0) ? $data['team1halfgoals'] : "";
+        $this->team2halfgoals = (isset($data['team2halfgoals']) and $data['team2halfgoals']>=0) ? $data['team2halfgoals'] : "";
         $this->team1emblem = (isset($data['team1emblem'])) ? $data['team1emblem'] : null;
         $this->team2emblem = (isset($data['team2emblem'])) ? $data['team2emblem'] : null;
         $this->isfinished = (isset($data['isfinished'])) ? $data['isfinished'] : null;
@@ -57,12 +62,17 @@ class Match {
         return get_object_vars($this);
     }
 
-    public function setPoints(){
+    public function setPoints($full=true){
         $pointhelper = new GrisujiPoints();
         $toddehelper = new ToddePoints();
 
-        $this->points = $pointhelper->getPoints($this->team1goals, $this->team2goals, $this->team1tip, $this->team2tip);
-        $this->toddde = $toddehelper->getPoints($this->team1goals, $this->team2goals, $this->team1tip, $this->team2tip);
+        if ($full) {
+            $this->points = $pointhelper->getPoints($this->team1goals, $this->team2goals, $this->team1tip, $this->team2tip);
+            $this->toddde = $toddehelper->getPoints($this->team1goals, $this->team2goals, $this->team1tip, $this->team2tip);
+        } else {
+            $this->points = $pointhelper->getPoints($this->team1halfgoals, $this->team2halfgoals, $this->team1tip, $this->team2tip);
+            $this->toddde = $toddehelper->getPoints($this->team1halfgoals, $this->team2halfgoals, $this->team1tip, $this->team2tip);
+        }
     }
 
     public function getToddde(){

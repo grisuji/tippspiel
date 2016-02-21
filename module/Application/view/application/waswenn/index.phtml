@@ -1,0 +1,75 @@
+<section class="waswenn">
+    <h2>Halbzeitergebnisse zum Spieltag  <?php echo $this->day ?></h2>
+    <div align="right">
+    <?php
+    $form = $this->form;
+    $form->prepare();
+    $form->setAttribute('action', $this->url(NULL,array('controller'=>'waswenn', 'action'=>'index')));
+    $form->setAttribute('method', 'post');
+    echo $this->form()->openTag($form);
+    echo $this->formElement($form->get('selected_day'));
+    ?>
+    </div>
+    <table class="table" >
+        <tr>
+            <th colspan="3"><img src="<?php echo $this->basePath().'/img/grisuji_ball_hinten_2.png';?>"/></th>
+            <?php foreach ($this->live['matches'] as $matchid) { ?>
+                <th <?php if($this->live[$matchid]['finished'] == 0): ?>
+                    style="color:red"
+                <?php endif ?>
+                    >
+                    <img src="<?php echo $this->basePath().'/img/emblem/'.$this->live[$matchid]['emblem1'];?>"/></br>
+                    <?php if ($live[$matchid]['halfgoals1']!="") {
+                        echo $live[$matchid]['halfgoals1'];
+                        echo ":";
+                        echo $live[$matchid]['halfgoals2'];
+                    }?>
+                    </br>
+                    <img src="<?php echo $this->basePath().'/img/emblem/'.$this->live[$matchid]['emblem2'];?>"/>
+
+                </th>
+            <?php } ?>
+            <th style="color:#A4A4A4">Toddde</th>
+        </tr>
+        <?php
+        $mem_rank = -1;
+        foreach($this->user as $id => $u){
+            ?>
+            <tr>
+                <td>
+                    <?php if ($mem_rank!= $u['rank']) { echo $u['rank']; } ?>
+                </td>
+                <td>
+                    <a href="<?php echo $this->url('application/userpoints', array('userid' => $u['id'], 'day' => $this->day)) ?>"><?php echo $this->escapeHtml($u['name']);?></a>
+                </td>
+                <td>
+                    <?php echo $this->escapeHtml($u['points']); echo "/" ;echo $this->escapeHtml($u['points_all']);?>
+                </td>
+                <?php foreach ($this->live['matches'] as $matchid) { ?>
+                    <td <?php if ($u['matches'][$matchid] == 0): ?>
+                        style="color:#A4A4A4"
+                    <?php endif ?>
+                        >
+                        <?php if (isset($u['matches'][$matchid]['tip1'])) {
+                            echo $u['matches'][$matchid]['tip1'];
+                            echo ":";
+                            echo $u['matches'][$matchid]['tip2'];
+                        } ?>
+                        <?php if ($u['matches'][$matchid]['points'] > 0): ?>
+                            <strong style="color:darkgreen;font-size:100%">
+                                <sub>
+                                    <?php echo $u['matches'][$matchid]['points']; ?>
+                                </sub>
+                            </strong>
+                        <?php endif ?>
+                    </td>
+                <?php } ?>
+                <td style="color:#A4A4A4">
+                    <?php echo $this->escapeHtml($u['toddde']); echo "/" ; echo $this->escapeHtml($u['toddde_all']);?>
+                </td>
+            </tr>
+            <?php
+            $mem_rank = $u['rank'];
+        } ?>
+    </table>
+</section>

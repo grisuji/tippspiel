@@ -32,12 +32,12 @@ class UserDay {
         $this->matches[$match->id] = $match;
     }
 
-    public function setPoints(){
+    public function setPoints($full=true){
         $this->points = 0;
         $this->toddde= 0;
         foreach ($this->matches as $m) {
             /* @var $m \Application\Model\Match  */
-            $m->setPoints();
+            $m->setPoints($full);
             $this->points += $m->getPoints();
             $this->toddde += $m->getToddde();
         }
