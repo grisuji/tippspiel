@@ -43,19 +43,17 @@ class WaswennController  extends AbstractActionController{
         /* @var $matchTable \Application\Model\MatchTable  */
         /* @var $u \Users\Model\User */
         /* @var $userTable \Users\Model\UserTable  */
+        $day = null;
         $request = $this->getRequest();
         $post = $request->isPost();
         if ($post) {
-            $this->day = $this->request->getPost('select');
-            if (is_null($this->day)) {
-                $this->day = $this->request->getPost('day');
-                Debug::dump($this->day);
-            }
+            $day = $this->request->getPost('selected_day');
         }
 
         $matchTable = $this->getServiceLocator()->get('MatchTable');
-        if (is_null($this->day)) {
-            $this->day = $matchTable->getDayOfNextMatch();
+        $maxday = $matchTable->getDayOfNextMatch();
+        if (is_null($day)) {
+            $day=$maxday;
         }
         $matches = $matchTable->getSaisonTipsAndMatches(2015, "tips");
         $toddde =  $matchTable->getSaisonTipsAndMatches(2015, "todddetips");
@@ -80,15 +78,15 @@ class WaswennController  extends AbstractActionController{
         $saison->fillMissingDays();
         $saison->setPoints(false);
         $saison->sortAllDays();
-        $live = $saison->getMatchDataByDay($this->day);
-        $user = $saison->getUserDataByDay($this->day);
+        $live = $saison->getMatchDataByDay($day);
+        $user = $saison->getUserDataByDay($day);
         usort($user, array($this, "cmp_points"));
-        $form = new WaswennForm($this->day);
+        $form = new WaswennForm($day, $maxday);
 
         $view = new ViewModel(
             array(
                 'user'=>$user,
-                'day'=>$this->day,
+                'day'=>$day,
                 'live'=>$live,
                 'form'=>$form
             ));

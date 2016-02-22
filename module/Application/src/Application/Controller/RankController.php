@@ -13,6 +13,7 @@ use Zend\View\Model\ViewModel;
 use DateTime;
 use Zend\Json\Expr;
 use Zend\Json\Json;
+use Application\Form\RankForm;
 use Zend\Debug\Debug;
 
 
@@ -41,9 +42,19 @@ class RankController  extends AbstractActionController{
         /* @var $matchTable \Application\Model\MatchTable  */
         /* @var $u \Users\Model\User */
         /* @var $userTable \Users\Model\UserTable  */
+        $day = null;
+
+        $request = $this->getRequest();
+        $post = $request->isPost();
+        if ($post) {
+            $day = $this->request->getPost('selected_day');
+        }
 
         $matchTable = $this->getServiceLocator()->get('MatchTable');
-        $day = $matchTable->getDayOfNextMatch();
+        $maxday = $matchTable->getDayOfNextMatch();
+        if (is_null($day)) {
+            $day=$maxday;
+        }
         $matches = $matchTable->getSaisonTipsAndMatches(2015, "tips");
         $toddde =  $matchTable->getSaisonTipsAndMatches(2015, "todddetips");
 
@@ -82,12 +93,15 @@ class RankController  extends AbstractActionController{
 
         $data = $this->getHighChartLine("2015", $hc_xaxis_data, $hc_yaxis_data);
         $diagram = Json::encode($data, false, array('enableJsonExprFinder' => true));
+        $form = new RankForm($day, $maxday);
+
         $view = new ViewModel(
             array(
                 'user'=>$user,
                 'day'=>$day,
                 'live'=>$live,
-                'diagram'=>$diagram
+                'diagram'=>$diagram,
+                'form'=>$form
             ));
 
         return $view;

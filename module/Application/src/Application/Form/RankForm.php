@@ -11,11 +11,11 @@ use Zend\Form\Form;
 use Zend\Debug\Debug;
 
 
-class WaswennForm extends Form {
+class RankForm extends Form {
 
     public function __construct($day, $maxday, $name = null)
     {
-        parent::__construct('Waswenn');
+        parent::__construct('Rank');
         $this->setAttribute('method', 'post');
         $this->setAttribute('enctype', 'multipart/form-data');
 
@@ -28,7 +28,7 @@ class WaswennForm extends Form {
                 'type' => 'select',
                 'name' => 'selected_day',
                 'attributes' => array(
-                    'onchange' => 'document.getElementById("Waswenn").submit();',
+                    'onchange' => 'document.getElementById("Rank").submit();',
                     'value' => $day //set checked to '1'
                 ),
                 'options' => array(

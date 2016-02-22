@@ -8,6 +8,7 @@
 
 namespace Application\Model;
 
+use Zend\Db\Metadata\Source\OracleMetadata;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\ResultSet\ResultInterface;
 use Zend\Db\Sql\Expression;
@@ -88,10 +89,15 @@ class MatchTable {
         $select->join(array('tips' => $sourcetable), 'matchid=matches.id', array('tipid'=>'id', 'userid', 'team1tip', 'team2tip'), 'right');
         $select->join(array('team1' => 'teams'), 'team1.id=matches.team1id', array('team1name' => 'longname', 'team1emblem' => 'emblem'), 'left');
         $select->join(array('team2' => 'teams'), 'team2.id=matches.team2id', array('team2name' => 'longname', 'team2emblem' => 'emblem'),'left');
-        $select->join('user', 'user.id=tips.userid', array('username' => 'name'),'left');
+        $select->join('user', 'user.id=tips.userid', array('username' => 'name', 'lastlogin' => 'lastlogin'),'left');
         $select->order('date_time ASC');
         $where = new Where();
-        $where->equalTo('saison',(int) $saison);
+        $where->equalTo('saison',(int) $saison)
+              ->AND
+              ->NEST
+              ->notEqualTo('lastlogin', "1970-01-01 00:00:00")
+              ->OR
+              ->isNull('lastlogin');
         $select->where($where);
         //Debug::dump($select->getSqlString());
         $resultset = $this->tableGateway->selectWith($select);
