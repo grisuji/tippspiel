@@ -19,7 +19,16 @@
         <?php endif ?>
     <?php endif ?>
 
-
+    <div align="right">
+    <?php
+    $form1 = $this->form;
+    $form1->prepare();
+    $form1->setAttribute('action', $this->url(NULL,array('controller'=>'deliver', 'action'=>'index')));
+    $form1->setAttribute('method', 'post');
+    echo $this->form()->openTag($form1);
+    echo $this->formElement($form1->get('select'));
+    echo $this->form()->closeTag($form1);
+    ?>
 
     <?php
     $form2 = $this->form;
@@ -29,6 +38,7 @@
     echo $this->form()->openTag($form2);
     echo $this->formElement($form2->get('day'));
     ?>
+    </div>
     <table class="table">
         <tr>
             <th>Spielbeginn</th>
