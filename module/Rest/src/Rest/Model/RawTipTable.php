@@ -7,6 +7,7 @@
  */
 namespace Rest\Model;
 
+use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Debug\Debug;
@@ -20,18 +21,23 @@ class RawTipTable {
     }
 
     public function fetchAll(){
-        $resultSet = $this->tableGateway->select();
-        return $resultSet;
+        return $this->getNewTips(0);
     }
 
     public function getNewTips($timestamp){
-        $date = date("Y-m-d H:i:s", $timestamp);
-        $select = $this->tableGateway->getSql()->select();
+        $now = date("Y-m-d H:i:s");
+        $last = date("Y-m-d H:i:s",$timestamp);
+        $select = new Select();
+        $select->from(array('t'=>'tips'));
+        $select->join(array('m'=>'matches'), 't.matchid = m.id');
         $where = new Where();
-        $where->greaterThan('lastchange',$date);
+        $where->lessThan('m.date_time',$now)
+            ->AND
+            ->greaterThanOrEqualTo('t.lastchange', $last);
         $select->where($where);
-        $resultset = $this->tableGateway->selectWith($select);
-        return $resultset;
+        #print_r($select->getSqlString());
+        $resultSet = $this->tableGateway->selectWith($select);
+        return $resultSet;
     }
 
 }
