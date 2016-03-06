@@ -5,10 +5,10 @@ use Zend\Debug\Debug;
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
 
-class UserRestController extends AbstractRestfulController
+class TeamRestController extends AbstractRestfulController
 {
 
-    protected $userTable;
+    protected $teamTable;
     protected $authservice;
 
     public function getAuthService()
@@ -46,19 +46,18 @@ class UserRestController extends AbstractRestfulController
         return 0;
     }
 
-    private function getUserTable()
+    private function getRawTeamTable()
     {
-        if (!$this->userTable) {
-            $this->userTable = $this->getServiceLocator()->get('RawUserTable');
+        if (!$this->teamTable) {
+            $this->teamTable = $this->getServiceLocator()->get('RawTeamTable');
         }
-        return $this->userTable;
+        return $this->teamTable;
     }
 
     private function genJSon($db_result) {
         $result = array();
-        foreach ($db_result as $u) {
-            if ($u->name=="admin") continue;
-            $result[] = $u;
+        foreach ($db_result as $r) {
+            $result[] = $r;
         }
 
         return new JsonModel(array(
@@ -69,15 +68,15 @@ class UserRestController extends AbstractRestfulController
     public function getList()
     {
         if (!$this->checkAuth()) exit;
-        $users = $this->getUserTable()->fetchAll();
-        return $this->genJSon($users);
+        $teams = $this->getRawTeamTable()->fetchAll();
+        return $this->genJSon($teams);
     }
 
     public function get($id)
     {
         if (!$this->checkAuth()) exit;
-        $result = $this->getUserTable()->getNewUsers($id);
-        return $this->genJSon($result);
+        $teams = $this->getRawTeamTable()->getNewTeams($id);
+        return $this->genJSon($teams);
     }
 
     public function create($data)

@@ -3,12 +3,13 @@ namespace Rest\Controller;
 
 use Zend\Debug\Debug;
 use Zend\Mvc\Controller\AbstractRestfulController;
+
 use Zend\View\Model\JsonModel;
 
-class UserRestController extends AbstractRestfulController
+class TipRestController extends AbstractRestfulController
 {
 
-    protected $userTable;
+    protected $tipTable;
     protected $authservice;
 
     public function getAuthService()
@@ -46,19 +47,18 @@ class UserRestController extends AbstractRestfulController
         return 0;
     }
 
-    private function getUserTable()
+    private function getRawTipTable()
     {
-        if (!$this->userTable) {
-            $this->userTable = $this->getServiceLocator()->get('RawUserTable');
+        if (!$this->tipTable) {
+            $this->tipTable = $this->getServiceLocator()->get('RawTipTable');
         }
-        return $this->userTable;
+        return $this->tipTable;
     }
 
     private function genJSon($db_result) {
         $result = array();
-        foreach ($db_result as $u) {
-            if ($u->name=="admin") continue;
-            $result[] = $u;
+        foreach ($db_result as $r) {
+            $result[] = $r;
         }
 
         return new JsonModel(array(
@@ -69,15 +69,15 @@ class UserRestController extends AbstractRestfulController
     public function getList()
     {
         if (!$this->checkAuth()) exit;
-        $users = $this->getUserTable()->fetchAll();
-        return $this->genJSon($users);
+        $tips = $this->getRawTipTable()->fetchAll();
+        return $this->genJSon($tips);
     }
 
     public function get($id)
     {
         if (!$this->checkAuth()) exit;
-        $result = $this->getUserTable()->getNewUsers($id);
-        return $this->genJSon($result);
+        $tips = $this->getRawTipTable()->getNewTips($id);
+        return $this->genJSon($tips);
     }
 
     public function create($data)

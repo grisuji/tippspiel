@@ -161,4 +161,20 @@ class MatchTable {
 
         return "1";
     }
+
+    public function fetchAll(){
+        $resultSet = $this->tableGateway->select();
+        return $resultSet;
+    }
+
+    public function getNewMatches($timestamp){
+        $date = date("Y-m-d H:i:s", $timestamp);
+        $select = $this->tableGateway->getSql()->select();
+        $where = new Where();
+        $where->greaterThan('lastchange',$date);
+        $select->where($where);
+        $resultset = $this->tableGateway->selectWith($select);
+        return $resultset;
+    }
+
 }

@@ -9,6 +9,7 @@
 namespace Users\Model;
 
 use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\Sql\Where;
 use Zend\Db\TableGateway\TableGateway;
 use Exception;
 use Zend\Debug\Debug;
@@ -72,6 +73,23 @@ class UserTable {
             throw new Exception("Could not find row $id");
         }
         return $row;
+    }
+
+    /**
+     * Get User newer than timestamp
+     * @param string $timestamp
+     * @throws Exception
+     * @return array|\ArrayObject|null
+     */
+    public function getNewUsers($timestamp)
+    {
+        $date = date("Y-m-d H:i:s", $timestamp);
+        $select = $this->tableGateway->getSql()->select();
+        $where = new Where();
+        $where->greaterThan('lastchange',$date);
+        $select->where($where);
+        $resultset = $this->tableGateway->selectWith($select);
+        return $resultset;
     }
 
     /**

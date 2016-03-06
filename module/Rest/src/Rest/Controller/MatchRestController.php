@@ -3,12 +3,13 @@ namespace Rest\Controller;
 
 use Zend\Debug\Debug;
 use Zend\Mvc\Controller\AbstractRestfulController;
+
 use Zend\View\Model\JsonModel;
 
-class UserRestController extends AbstractRestfulController
+class MatchRestController extends AbstractRestfulController
 {
 
-    protected $userTable;
+    protected $matchTable;
     protected $authservice;
 
     public function getAuthService()
@@ -46,19 +47,18 @@ class UserRestController extends AbstractRestfulController
         return 0;
     }
 
-    private function getUserTable()
+    private function getRawMatchTable()
     {
-        if (!$this->userTable) {
-            $this->userTable = $this->getServiceLocator()->get('RawUserTable');
+        if (!$this->matchTable) {
+            $this->matchTable = $this->getServiceLocator()->get('RawMatchTable');
         }
-        return $this->userTable;
+        return $this->matchTable;
     }
 
     private function genJSon($db_result) {
         $result = array();
-        foreach ($db_result as $u) {
-            if ($u->name=="admin") continue;
-            $result[] = $u;
+        foreach ($db_result as $r) {
+            $result[] = $r;
         }
 
         return new JsonModel(array(
@@ -69,15 +69,15 @@ class UserRestController extends AbstractRestfulController
     public function getList()
     {
         if (!$this->checkAuth()) exit;
-        $users = $this->getUserTable()->fetchAll();
-        return $this->genJSon($users);
+        $matches = $this->getRawMatchTable()->fetchAll();
+        return $this->genJSon($matches);
     }
 
     public function get($id)
     {
         if (!$this->checkAuth()) exit;
-        $result = $this->getUserTable()->getNewUsers($id);
-        return $this->genJSon($result);
+        $matches = $this->getRawMatchTable()->getNewMatches($id);
+        return $this->genJSon($matches);
     }
 
     public function create($data)
