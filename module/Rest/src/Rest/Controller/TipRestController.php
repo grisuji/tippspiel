@@ -68,14 +68,14 @@ class TipRestController extends AbstractRestfulController
 
     public function getList()
     {
-        if (!$this->checkAuth()) exit;
+        #if (!$this->checkAuth()) exit;
         $tips = $this->getRawTipTable()->fetchAll();
         return $this->genJSon($tips);
     }
 
     public function get($id)
     {
-        if (!$this->checkAuth()) exit;
+        #if (!$this->checkAuth()) exit;
         $tips = $this->getRawTipTable()->getNewTips($id);
         return $this->genJSon($tips);
     }

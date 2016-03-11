@@ -9,7 +9,6 @@ class UserRestController extends AbstractRestfulController
 {
 
     protected $userTable;
-    protected $authservice;
 
     public function getAuthService()
     {
@@ -68,14 +67,12 @@ class UserRestController extends AbstractRestfulController
 
     public function getList()
     {
-        if (!$this->checkAuth()) exit;
         $users = $this->getUserTable()->fetchAll();
         return $this->genJSon($users);
     }
 
     public function get($id)
     {
-        if (!$this->checkAuth()) exit;
         $result = $this->getUserTable()->getNewUsers($id);
         return $this->genJSon($result);
     }

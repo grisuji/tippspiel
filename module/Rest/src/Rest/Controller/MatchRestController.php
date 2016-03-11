@@ -10,42 +10,6 @@ class MatchRestController extends AbstractRestfulController
 {
 
     protected $matchTable;
-    protected $authservice;
-
-    public function getAuthService()
-    {
-        if (! $this->authservice) {
-            $this->authservice = $this->getServiceLocator()->get('AuthService');
-        }
-        return $this->authservice;
-    }
-
-    private function checkAuth()
-    {
-        $request = $this->getRequest();
-        $headers = $request->getHeaders();
-        if ($headers->has('Authorization')) {
-            $base64=$headers->get('Authorization')->getFieldValue();
-            $code=base64_decode(str_replace("Basic ","",$base64));
-            $login=explode(":",$code,2);
-            $user=$login[0];
-            $passwd=$login[1];
-            $adapter = $this->getAuthService()->getAdapter();
-            //check authentication...
-            $adapter->setIdentity($user);
-            $adapter->setCredential($passwd);
-            $result = $this->getAuthService()->authenticate();
-            return $result->isValid();
-        }
-        return false;
-    }
-
-    private function getUserId(){
-        if($this->getAuthService()->hasIdentity()) {
-            return $this->getAuthService()->getStorage()->read()->id;
-        }
-        return 0;
-    }
 
     private function getRawMatchTable()
     {
@@ -68,14 +32,12 @@ class MatchRestController extends AbstractRestfulController
 
     public function getList()
     {
-        if (!$this->checkAuth()) exit;
         $matches = $this->getRawMatchTable()->fetchAll();
         return $this->genJSon($matches);
     }
 
     public function get($id)
     {
-        if (!$this->checkAuth()) exit;
         $matches = $this->getRawMatchTable()->getNewMatches($id);
         return $this->genJSon($matches);
     }
