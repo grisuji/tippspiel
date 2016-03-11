@@ -1,5 +1,6 @@
 <?php
 namespace Rest;
+use Rest\Model\RawTodddeMatchMappingTable;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 
@@ -11,6 +12,12 @@ use Rest\Model\RawTeam;
 use Rest\Model\RawTeamTable;
 use Rest\Model\RawUser;
 use Rest\Model\RawUserTable;
+use Rest\Model\RawTodddeTip;
+use Rest\Model\RawTodddeTipTable;
+use Rest\Model\RawTodddeTeamMapping;
+use Rest\Model\RawTodddeTeamMappingTable;
+use Rest\Model\RawTodddeUserMapping;
+use Rest\Model\RawTodddeUserMappingTable;
 
 
 class Module
@@ -76,6 +83,39 @@ class Module
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new RawUser());
                     return new TableGateway('user', $dbAdapter, null, $resultSetPrototype);
+                },
+                'RawTodddeTeamMappingTable' => function ($sm) {
+                    $tableGateway = $sm->get('RawTodddeTeamMappingTableGateway');
+                    $table = new RawTodddeTeamMappingTable($tableGateway);
+                    return $table;
+                },
+                'RawTodddeTeamMappingTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new RawTodddeTeamMapping());
+                    return new TableGateway('toddde_team_matching', $dbAdapter, null, $resultSetPrototype);
+                },
+                'RawTodddeUserMappingTable' => function ($sm) {
+                    $tableGateway = $sm->get('RawTodddeUserMappingTableGateway');
+                    $table = new RawTodddeUserMappingTable($tableGateway);
+                    return $table;
+                },
+                'RawTodddeUserMappingTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new RawTodddeUserMapping());
+                    return new TableGateway('toddde_user_matching', $dbAdapter, null, $resultSetPrototype);
+                },
+                'RawTodddeTipTable' => function ($sm) {
+                    $tableGateway = $sm->get('RawTodddeTipTableGateway');
+                    $table = new RawTodddeTipTable($tableGateway);
+                    return $table;
+                },
+                'RawTodddeTipTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new RawTodddeTip());
+                    return new TableGateway('todddetips', $dbAdapter, null, $resultSetPrototype);
                 },
             ),
             'invokables' => array(),
