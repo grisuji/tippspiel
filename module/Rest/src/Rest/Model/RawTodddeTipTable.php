@@ -27,7 +27,7 @@ class RawTodddeTipTable {
         return $resultSet;
     }
 
-    public function getNewTip($timestamp){
+    public function getNewTodddeTip($timestamp){
         $date = date("Y-m-d H:i:s", $timestamp);
         $select = $this->tableGateway->getSql()->select();
         $where = new Where();
