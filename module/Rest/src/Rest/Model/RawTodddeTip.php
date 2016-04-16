@@ -25,8 +25,8 @@ class RawTodddeTip {
         $this->id = (isset($data['id'])) ? $data['id'] : null;
         $this->userid = (isset($data['userid'])) ? $data['userid'] : null;
         $this->matchid = (isset($data['matchid'])) ? $data['matchid'] : null;
-        $this->team1tip = (isset($data['team1tip'])) ? $data['team1tip'] : null;
-        $this->team2tip = (isset($data['team2tip'])) ? $data['team2tip'] : null;
+        $this->team1tip = (isset($data['team1tip'])) ? $data['team1tip'] : -1;
+        $this->team2tip = (isset($data['team2tip'])) ? $data['team2tip'] : -1;
         $this->lastchange = (isset($data['lastchange'])) ? $data['lastchange'] : null;
     }
 

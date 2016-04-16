@@ -35,10 +35,10 @@ class RawMatch {
         $this->date_time = (isset($data['date_time'])) ? $data['date_time'] : null;
         $this->team1id = (isset($data['team1id'])) ? $data['team1id'] : null;
         $this->team2id = (isset($data['team2id'])) ? $data['team2id'] : null;
-        $this->team1goals = (isset($data['team1goals']) and $data['team1goals']>=0) ? $data['team1goals'] : "";
-        $this->team2goals = (isset($data['team2goals']) and $data['team2goals']>=0) ? $data['team2goals'] : "";
-        $this->team1halfgoals = (isset($data['team1halfgoals']) and $data['team1halfgoals']>=0) ? $data['team1halfgoals'] : "";
-        $this->team2halfgoals = (isset($data['team2halfgoals']) and $data['team2halfgoals']>=0) ? $data['team2halfgoals'] : "";
+        $this->team1goals = (isset($data['team1goals']) and $data['team1goals']>=0) ? $data['team1goals'] : -1;
+        $this->team2goals = (isset($data['team2goals']) and $data['team2goals']>=0) ? $data['team2goals'] : -1;
+        $this->team1halfgoals = (isset($data['team1halfgoals']) and $data['team1halfgoals']>=0) ? $data['team1halfgoals'] : -1;
+        $this->team2halfgoals = (isset($data['team2halfgoals']) and $data['team2halfgoals']>=0) ? $data['team2halfgoals'] : -1;
         $this->isfinished = (isset($data['isfinished'])) ? $data['isfinished'] : null;
         $this->lastchange = (isset($data['lastchange'])) ? $data['lastchange'] : null;
     }
