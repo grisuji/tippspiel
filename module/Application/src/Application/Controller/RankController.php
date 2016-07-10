@@ -55,8 +55,8 @@ class RankController  extends AbstractActionController{
         if (is_null($day)) {
             $day=$maxday;
         }
-        $matches = $matchTable->getSaisonTipsAndMatches(2015, "tips");
-        $toddde =  $matchTable->getSaisonTipsAndMatches(2015, "todddetips");
+        $matches = $matchTable->getSaisonTipsAndMatches(2016, "tips");
+        $toddde =  $matchTable->getSaisonTipsAndMatches(2016, "todddetips");
 
         $saison = new Saison();
         $now = new DateTime();
@@ -91,7 +91,7 @@ class RankController  extends AbstractActionController{
         #Debug::dump($hc_xaxis_data);
         #Debug::dump($hc_yaxis_data);
 
-        $data = $this->getHighChartLine("2015", $hc_xaxis_data, $hc_yaxis_data);
+        $data = $this->getHighChartLine("2016", $hc_xaxis_data, $hc_yaxis_data);
         $diagram = Json::encode($data, false, array('enableJsonExprFinder' => true));
         $form = new RankForm($day, $maxday);
 
