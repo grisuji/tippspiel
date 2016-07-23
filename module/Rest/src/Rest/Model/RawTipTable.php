@@ -29,11 +29,12 @@ class RawTipTable {
         $last = date("Y-m-d H:i:s",$timestamp);
         $select = new Select();
         $select->from(array('t'=>'tips'));
-        $select->join(array('m'=>'matches'), 't.matchid = m.id');
+        //$select->join(array('m'=>'matches'), 't.matchid = m.id');
         $where = new Where();
-        $where->lessThan('m.date_time',$now)
-            ->AND
-            ->greaterThanOrEqualTo('t.lastchange', $last);
+        $where->greaterThan('lastchange',$last);
+//        $where->lessThan('m.date_time',$now)
+//            ->AND
+//            ->greaterThanOrEqualTo('t.lastchange', $last);
         $select->where($where);
         #print_r($select->getSqlString());
         $resultSet = $this->tableGateway->selectWith($select);
