@@ -55,8 +55,8 @@ class WaswennController  extends AbstractActionController{
         if (is_null($day)) {
             $day=$maxday;
         }
-        $matches = $matchTable->getSaisonTipsAndMatches(2016, "tips");
-        $toddde =  $matchTable->getSaisonTipsAndMatches(2016, "todddetips");
+        $matches = $matchTable->getSaisonTipsAndMatches(2017, "tips");
+        $toddde =  $matchTable->getSaisonTipsAndMatches(2017, "todddetips");
 
         $saison = new Saison();
         $now = new DateTime();
